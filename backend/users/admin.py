@@ -13,7 +13,7 @@ class UserAdmin(auth_admin.UserAdmin):
     add_form = UserAdminCreationForm
     fieldsets = (
         (None, {"fields": ("username", "password")}),
-        (_("Personal info"), {"fields": ("name", "email")}),
+        (_("Personal info"), {"fields": ("name", "email", "avatar")}),
         (
             _("Permissions"),
             {
@@ -29,8 +29,18 @@ class UserAdmin(auth_admin.UserAdmin):
                 ),
             },
         ),
+        (
+            _("Настройки"),
+            {
+                "fields": (
+                    "email_notifications",
+                    "language",
+                ),
+            },
+        ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
+    list_select_related = ("settings",)
     list_display = [
         "username",
         "name",

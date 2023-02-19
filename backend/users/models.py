@@ -10,15 +10,23 @@ class User(AbstractUser):
         SELLER = "SELLER", "seller"
         BOTH = "BOTH", "both"
 
+    class Lang(models.TextChoices):
+        EN = "EN", "EN"
+        RU = "RU", "RU"
+
     # Fields
     name = models.CharField(_("Name of User"), blank=True, max_length=255)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
+    avatar = models.ImageField(upload_to="avatars/", default="avatars/default.png")
     type = models.CharField(
         max_length=12, choices=Types.choices, default=Types.CUSTOMER
     )
     is_customer = models.BooleanField(_("Покупатель"), default=False)
     is_seller = models.BooleanField(_("Продавец"), default=False)
+    # Settings
+    email_notifications = models.BooleanField(default=True)
+    language = models.CharField(max_length=3, choices=Lang.choices, default=Lang.EN)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
