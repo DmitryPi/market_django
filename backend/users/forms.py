@@ -42,6 +42,21 @@ class UserSignupForm(SignupForm):
             widget=forms.RadioSelect(),
         )
 
+    def save(self, request):
+        user = super().save(request)
+        user_type = self.cleaned_data.get("user_type")
+
+        if user_type == User.Types.CUSTOMER:
+            user.is_customer = True
+        elif user_type == User.Types.SELLER:
+            user.is_seller = True
+        elif user_type == User.Types.BOTH:
+            user.is_customer = True
+            user.is_seller = True
+        user.save()
+
+        return user
+
 
 class UserSocialSignupForm(SocialSignupForm):
     """
