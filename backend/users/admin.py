@@ -18,6 +18,7 @@ class UserAdmin(auth_admin.UserAdmin):
             _("Permissions"),
             {
                 "fields": (
+                    "type",
                     "is_active",
                     "is_staff",
                     "is_superuser",
@@ -30,10 +31,30 @@ class UserAdmin(auth_admin.UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ["username", "name", "is_superuser"]
+    list_display = [
+        "username",
+        "name",
+        "is_superuser",
+        "is_customer",
+        "is_seller",
+    ]
     search_fields = ["name"]
 
 
-admin.register(Customer)
+class ProxyUserAdmin(UserAdmin):
+    list_display = [
+        "username",
+        "name",
+        "is_customer",
+        "is_seller",
+    ]
 
-admin.register(Seller)
+
+@admin.register(Customer)
+class CustomerAdmin(ProxyUserAdmin):
+    pass
+
+
+@admin.register(Seller)
+class SellerAdmin(ProxyUserAdmin):
+    pass
