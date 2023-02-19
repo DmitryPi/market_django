@@ -1,11 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
-from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from backend.users.forms import UserAdminChangeForm, UserAdminCreationForm
 
-User = get_user_model()
+from .models import Customer, Seller, User
 
 
 @admin.register(User)
@@ -22,6 +21,8 @@ class UserAdmin(auth_admin.UserAdmin):
                     "is_active",
                     "is_staff",
                     "is_superuser",
+                    "is_customer",
+                    "is_seller",
                     "groups",
                     "user_permissions",
                 ),
@@ -31,3 +32,8 @@ class UserAdmin(auth_admin.UserAdmin):
     )
     list_display = ["username", "name", "is_superuser"]
     search_fields = ["name"]
+
+
+admin.register(Customer)
+
+admin.register(Seller)
