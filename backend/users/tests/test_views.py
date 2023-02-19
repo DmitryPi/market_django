@@ -8,14 +8,10 @@ from django.http import HttpRequest, HttpResponseRedirect
 from django.test import RequestFactory
 from django.urls import reverse
 
-from backend.users.forms import UserAdminChangeForm
-from backend.users.models import User
-from backend.users.tests.factories import UserFactory
-from backend.users.views import (
-    UserRedirectView,
-    UserUpdateView,
-    user_detail_view,
-)
+from ..forms import UserAdminChangeForm
+from ..models import User
+from ..views import UserRedirectView, UserUpdateView, user_detail_view
+from .factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

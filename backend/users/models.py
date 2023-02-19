@@ -1,7 +1,9 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+
+from .managers import CustomerManager, SellerManager
 
 
 class User(AbstractUser):
@@ -31,20 +33,6 @@ class User(AbstractUser):
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
-
-
-class CustomerManager(BaseUserManager):
-    def get_queryset(self, *args, **kwargs):
-        queryset = super().get_queryset(*args, **kwargs)
-        queryset = queryset.filter(is_customer=True)
-        return queryset
-
-
-class SellerManager(BaseUserManager):
-    def get_queryset(self, *args, **kwargs):
-        queryset = super().get_queryset(*args, **kwargs)
-        queryset = queryset.filter(is_seller=True)
-        return queryset
 
 
 class Customer(User):
