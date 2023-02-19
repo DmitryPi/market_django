@@ -40,7 +40,6 @@ class UserAdmin(auth_admin.UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_select_related = ("settings",)
     list_display = [
         "username",
         "name",

@@ -1,5 +1,6 @@
 from allauth.account.forms import SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
+from django import forms
 from django.contrib.auth import forms as admin_forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
@@ -32,6 +33,14 @@ class UserSignupForm(SignupForm):
     Default fields will be added automatically.
     Check UserSocialSignupForm for accounts created from social.
     """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields.pop("email")
+        self.fields["user_type"] = forms.TypedChoiceField(
+            choices=User.Types.choices,
+            widget=forms.RadioSelect(),
+        )
 
 
 class UserSocialSignupForm(SocialSignupForm):
