@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="board-nav">
-        <a href="{% url 'board:index' %}">Index</a>
+        <a href="{% url 'board:index' request.user.username %}">Index</a>
         <a href="{% url 'board:settings' %}">Settings</a>
     </div>
 {% endblock content %}

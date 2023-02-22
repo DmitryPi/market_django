@@ -7,7 +7,7 @@ from backend.users.tests.factories import UserFactory
 class DashboardViewTests(TestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.url = reverse("board:index")
+        self.url = reverse("board:index", kwargs={"username": self.user.username})
 
     def test_response(self):
         self.client.force_login(self.user)
