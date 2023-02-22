@@ -4,10 +4,8 @@ url_prefix = "/board"
 
 
 def test_dashboard_index():
-    rev = reverse("board:index")
-    res = resolve(f"{url_prefix}/").view_name
-    assert rev == f"{url_prefix}/"
-    assert res == "board:index"
+    assert reverse("board:index") == f"{url_prefix}/"
+    assert resolve(f"{url_prefix}/").view_name == "board:index"
 
 
 def test_dashboard_settings():
@@ -15,3 +13,8 @@ def test_dashboard_settings():
     res = resolve(f"{url_prefix}/settings/").view_name
     assert rev == f"{url_prefix}/settings/"
     assert res == "board:settings"
+
+
+def test_redirect():
+    assert reverse("board:redirect") == "/board/~redirect/"
+    assert resolve("/board/~redirect/").view_name == "board:redirect"
