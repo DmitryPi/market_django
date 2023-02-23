@@ -39,10 +39,11 @@ class DashboardSettingsViewTests(TestCase):
     def test_post_avatar_form(self):
         self.client.force_login(self.user)
         # read mock image
-        with open("backend/dashboard/tests/test_avatar.jpg", "rb") as f:
-            image = SimpleUploadedFile(
-                "test_avatar.jpg", f.read(), content_type="image/jpeg"
-            )
+        image = SimpleUploadedFile(
+            name="test_avatar.jpg",
+            content=open("backend/dashboard/tests/test_avatar.jpg", "rb").read(),
+            content_type="image/jpeg",
+        )
         data = {"avatar": image}
         response = self.client.post(reverse("dashboard:settings"), data, follow=True)
         self.user.refresh_from_db()
