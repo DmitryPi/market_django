@@ -1,7 +1,15 @@
 {% extends "dashboard/base.html" %}
 
+{% load static %}
+
 
 {% block content %}
     {{ block.super }}
-    dashboard settings
+    <img src="{{ request.user.avatar.url }}" alt="Avatar">
+    <h2>Update Avatar</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ avatar_form.as_p }}
+        <button type="submit">Update</button>
+    </form>
 {% endblock content %}
