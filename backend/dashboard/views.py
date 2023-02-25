@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import JsonResponse
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView, View
 
 from .forms import AvatarUpdateForm
@@ -15,10 +17,18 @@ class DashboardView(DetailView):
     template_name = "dashboard/index.html"
 
 
-class DashboardSettingsView(UpdateView):
+class DashboardSettingsView(SuccessMessageMixin, UpdateView):
     model = User
-    fields = ["name", "email"]
+    fields = [
+        "name",
+        "email",
+        "phone_number",
+        "date_of_birth",
+        "city",
+        "metamask_wallet",
+    ]
     template_name = "dashboard/settings.html"
+    success_message = _("Information successfully updated")
 
     def get_success_url(self):
         return reverse("board:settings")
