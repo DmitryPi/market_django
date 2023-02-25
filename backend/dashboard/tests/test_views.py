@@ -71,3 +71,9 @@ class DashboardSettingsViewTests(TestCase):
         # tests
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "account/login.html")
+
+
+class AvatarUpdateViewTests(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.url = reverse("board:settings_avatar_update")

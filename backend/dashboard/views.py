@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import redirect, render
+from django.http import JsonResponse
 from django.urls import reverse
-from django.views.generic import DetailView, RedirectView
+from django.views.generic import DetailView, RedirectView, View
 
 from .forms import AvatarUpdateForm
 
@@ -16,26 +16,32 @@ class DashboardView(DetailView):
 
 
 class DashboardSettingsView(DetailView):
+    """TODO: try changing to FormView"""
+
     template_name = "dashboard/settings.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["avatar_form"] = AvatarUpdateForm
         return context
 
     def get_object(self, *args, **kwargs):
         return self.request.user
 
+
+class AvatarUpdateView(View):
     def post(self, request):
         form = AvatarUpdateForm(request.POST, request.FILES)
-
         if form.is_valid() and request.FILES:
             user = self.request.user
             user.avatar = form.cleaned_data.get("avatar")
             user.save()
-            return redirect("board:settings")
-
-        return render(request, "dashboard/settings.html", {"avatar_form": form})
+            return JsonResponse({"avatar_url": user.avatar.url})
+        # handle form errors
+        errors = form.errors.as_data()
+        error_messages = [
+            error.message for error_list in errors.values() for error in error_list
+        ]
+        return JsonResponse({"error": error_messages}, status=400)
 
 
 class DashboardRedirectView(RedirectView):

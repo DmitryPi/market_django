@@ -19,6 +19,13 @@ def test_dashboard_settings():
     assert res == "board:settings"
 
 
+def test_dashboard_settings_avatar_update():
+    rev = reverse("board:settings_avatar_update")
+    res = resolve(f"{url_prefix}/~settings/avatar-update/").view_name
+    assert rev == f"{url_prefix}/~settings/avatar-update/"
+    assert res == "board:settings_avatar_update"
+
+
 def test_redirect():
     assert reverse("board:redirect") == "/board/~redirect/"
     assert resolve("/board/~redirect/").view_name == "board:redirect"
