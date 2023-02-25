@@ -36,44 +36,47 @@ class DashboardSettingsViewTests(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
 
-    def test_post_avatar_form(self):
-        self.client.force_login(self.user)
-        # read mock image
-        image = SimpleUploadedFile(
-            name="test_avatar.jpg",
-            content=open("backend/dashboard/tests/test_avatar.jpg", "rb").read(),
-            content_type="image/jpeg",
-        )
-        data = {"avatar": image}
-        response = self.client.post(reverse("dashboard:settings"), data, follow=True)
-        self.user.refresh_from_db()
-        # tests
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "dashboard/settings.html")
-        self.assertIn("avatar_form", response.context)
-        self.assertEqual(self.user.avatar, "avatars/test_avatar.jpg")
-
-    def test_post_avatar_form_invalid(self):
-        self.client.force_login(self.user)
-        # read mock image
-        data = {"avatar": ""}
-        response = self.client.post(reverse("dashboard:settings"), data, follow=True)
-        self.user.refresh_from_db()
-        # tests
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "dashboard/settings.html")
-        self.assertIn("avatar_form", response.context)
-        self.assertEqual(self.user.avatar, "avatars/default.png")
-
-    def test_post_avatar_form_anon(self):
-        data = {"avatar": ""}
-        response = self.client.post(reverse("dashboard:settings"), data, follow=True)
-        # tests
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "account/login.html")
-
 
 class AvatarUpdateViewTests(TestCase):
     def setUp(self):
         self.user = UserFactory()
         self.url = reverse("board:settings_avatar_update")
+
+    def test_get(self):
+        self.client.force_login(self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 405)
+
+    def test_post_avatar_form(self):
+        self.client.force_login(self.user)
+        # read mock image
+        avatar = "test_avatar.jpg"
+        image = SimpleUploadedFile(
+            name=avatar,
+            content=open(f"backend/dashboard/tests/{avatar}", "rb").read(),
+            content_type="image/jpeg",
+        )
+        data = {"avatar": image}
+        response = self.client.post(self.url, data)
+        self.user.refresh_from_db()
+        # tests
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"avatar_url": f"/media/avatars/{avatar}"})
+        self.assertEqual(self.user.avatar, f"avatars/{avatar}")
+
+    def test_post_avatar_form_invalid(self):
+        self.client.force_login(self.user)
+        # read mock image
+        data = {"avatar": ""}
+        response = self.client.post(self.url, data)
+        response_json = response.json()
+        self.user.refresh_from_db()
+        # tests
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue(isinstance(response_json["error"], list))
+        self.assertEqual(self.user.avatar, "avatars/default.png")
+
+    def test_post_avatar_form_anon(self):
+        data = {"avatar": ""}
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 302)

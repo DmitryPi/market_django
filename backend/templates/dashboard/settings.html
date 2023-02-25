@@ -5,8 +5,8 @@
 
 {% block content %}
     {{ block.super }}
+    <h3>Update Avatar</h3>
     <img id="avatar-preview" src="{{ request.user.avatar.url }}" alt="Avatar">
-    <h2>Update Avatar</h2>
     <form
         id="avatar-form"
         method="POST"
@@ -14,11 +14,12 @@
         action="{% url 'board:settings_avatar_update' %}">
         {% csrf_token %}
         <label for="avatar-input" class="avatar-icon">
-            <img id="avatar-select" src="https://cdn-icons-png.flaticon.com/128/2926/2926220.png"></img>
+            <img id="avatar-select" src="https://cdn-icons-png.flaticon.com/128/4155/4155431.png"></img>
         </label>
         <input type="file" name="avatar" id="avatar-input" style="display: none;" onchange="handleAvatarSelect()">
     </form>
     <div id="error-block"></div>
+    <h3>Update </h3>
 {% endblock content %}
 
 
