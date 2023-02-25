@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView, View
 
-from .forms import AvatarUpdateForm
+from .forms import AvatarUpdateForm, CustomUserUpdateForm
 
 User = get_user_model()
 
@@ -18,15 +18,7 @@ class DashboardView(DetailView):
 
 
 class DashboardSettingsView(SuccessMessageMixin, UpdateView):
-    model = User
-    fields = [
-        "name",
-        "email",
-        "phone_number",
-        "date_of_birth",
-        "city",
-        "metamask_wallet",
-    ]
+    form_class = CustomUserUpdateForm
     template_name = "dashboard/settings.html"
     success_message = _("Information successfully updated")
 

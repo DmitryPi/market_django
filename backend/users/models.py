@@ -24,7 +24,7 @@ class User(AbstractUser):
     last_name = None  # type: ignore
     phone_number = models.CharField(
         _("Номер телефона"),
-        max_length=20,
+        max_length=25,
         blank=True,
         validators=[
             RegexValidator(
