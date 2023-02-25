@@ -21,6 +21,12 @@ class AvatarUpdateForm(forms.Form):
         ],
     )
 
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get("avatar", None)
+        if not avatar:
+            raise forms.ValidationError(_("Avatar is required."))
+        return avatar
+
 
 class CustomUserUpdateForm(forms.ModelForm):
     class Meta:

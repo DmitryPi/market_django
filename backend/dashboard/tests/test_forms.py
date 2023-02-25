@@ -1,10 +1,51 @@
 from datetime import date
 
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
 from backend.users.tests.factories import UserFactory
 
-from ..forms import CustomUserUpdateForm
+from ..forms import AvatarUpdateForm, CustomUserUpdateForm
+
+
+class AvatarUpdateFormTests(TestCase):
+    def test_valid_form(self):
+        # create a fake image file to upload
+        file_data = open("backend/dashboard/tests/test_avatar.jpg", "rb").read()
+        uploaded_file = SimpleUploadedFile(
+            "image.jpg", file_data, content_type="image/jpeg"
+        )
+        form_data = {"avatar": uploaded_file}
+        form = AvatarUpdateForm(data=form_data, files=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_empty_form(self):
+        form_data = {}
+        form = AvatarUpdateForm(data=form_data, files=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn("avatar", form.errors)
+
+    def test_invalid_image_sm(self):
+        # create a fake image file that is too small to pass the validator
+        file_data = open("backend/dashboard/tests/test_avatar_sm.jpg", "rb").read()
+        uploaded_file = SimpleUploadedFile(
+            "small_image.jpg", file_data, content_type="image/jpeg"
+        )
+        form_data = {"avatar": uploaded_file}
+        form = AvatarUpdateForm(data=form_data, files=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn("avatar", form.errors)
+
+    def test_invalid_image_lg(self):
+        # create a fake image file that is too small to pass the validator
+        file_data = open("backend/dashboard/tests/test_avatar_lg.jpg", "rb").read()
+        uploaded_file = SimpleUploadedFile(
+            "large_image.jpg", file_data, content_type="image/jpeg"
+        )
+        form_data = {"avatar": uploaded_file}
+        form = AvatarUpdateForm(data=form_data, files=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn("avatar", form.errors)
 
 
 class CustomUserUpdateFormTests(TestCase):
