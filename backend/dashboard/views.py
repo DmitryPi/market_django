@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.urls import reverse
-from django.views.generic import DetailView, RedirectView, View
+from django.views.generic import DetailView, RedirectView, UpdateView, View
 
 from .forms import AvatarUpdateForm
 
@@ -15,14 +15,13 @@ class DashboardView(DetailView):
     template_name = "dashboard/index.html"
 
 
-class DashboardSettingsView(DetailView):
-    """TODO: try changing to FormView"""
-
+class DashboardSettingsView(UpdateView):
+    model = User
+    fields = ["name", "email"]
     template_name = "dashboard/settings.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    def get_success_url(self):
+        return reverse("board:settings")
 
     def get_object(self, *args, **kwargs):
         return self.request.user

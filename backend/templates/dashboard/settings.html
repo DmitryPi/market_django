@@ -17,9 +17,14 @@
             <img id="avatar-select" src="https://cdn-icons-png.flaticon.com/128/4155/4155431.png"></img>
         </label>
         <input type="file" name="avatar" id="avatar-input" style="display: none;" onchange="handleAvatarSelect()">
+        <div id="error-block"></div>
     </form>
-    <div id="error-block"></div>
     <h3>Update </h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update</button>
+    </form>
 {% endblock content %}
 
 
