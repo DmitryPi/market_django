@@ -9,9 +9,15 @@ from ..forms import AvatarUpdateForm, CustomUserUpdateForm
 
 
 class AvatarUpdateFormTests(TestCase):
+    def setUp(self):
+        base_path = "backend/dashboard/tests/assets"
+        self.avatar_path = f"{base_path}/test_avatar.jpg"
+        self.avatar_sm_path = f"{base_path}/test_avatar_sm.jpg"
+        self.avatar_lg_path = f"{base_path}/test_avatar_lg.jpg"
+
     def test_valid_form(self):
         # create a fake image file to upload
-        file_data = open("backend/dashboard/tests/test_avatar.jpg", "rb").read()
+        file_data = open(self.avatar_path, "rb").read()
         uploaded_file = SimpleUploadedFile(
             "image.jpg", file_data, content_type="image/jpeg"
         )
@@ -27,7 +33,7 @@ class AvatarUpdateFormTests(TestCase):
 
     def test_invalid_image_sm(self):
         # create a fake image file that is too small to pass the validator
-        file_data = open("backend/dashboard/tests/test_avatar_sm.jpg", "rb").read()
+        file_data = open(self.avatar_sm_path, "rb").read()
         uploaded_file = SimpleUploadedFile(
             "small_image.jpg", file_data, content_type="image/jpeg"
         )
@@ -38,7 +44,7 @@ class AvatarUpdateFormTests(TestCase):
 
     def test_invalid_image_lg(self):
         # create a fake image file that is too small to pass the validator
-        file_data = open("backend/dashboard/tests/test_avatar_lg.jpg", "rb").read()
+        file_data = open(self.avatar_lg_path, "rb").read()
         uploaded_file = SimpleUploadedFile(
             "large_image.jpg", file_data, content_type="image/jpeg"
         )

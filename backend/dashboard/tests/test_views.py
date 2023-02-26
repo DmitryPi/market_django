@@ -53,7 +53,7 @@ class AvatarUpdateViewTests(TestCase):
         avatar = "test_avatar.jpg"
         image = SimpleUploadedFile(
             name=avatar,
-            content=open(f"backend/dashboard/tests/{avatar}", "rb").read(),
+            content=open(f"backend/dashboard/tests/assets/{avatar}", "rb").read(),
             content_type="image/jpeg",
         )
         data = {"avatar": image}
