@@ -1,11 +1,41 @@
-from django.contrib.auth import get_user_model
+from django.contrib import messages
+from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView
+from eth_account.messages import defunct_hash_message
+from web3.auto import w3
 
 User = get_user_model()
+
+
+def metamask_login(request):
+    if request.method == "POST":
+        public_address = request.POST["accountAddress"]
+        signature = request.POST["signature"]
+        csrf_token = request.POST["csrfmiddlewaretoken"]
+
+        original_message = f"Sign in to our website {csrf_token}"
+        message_hash = defunct_hash_message(text=original_message)
+        signer = w3.eth.account.recoverHash(message_hash, signature=signature)
+
+        if signer == public_address:
+            user = User.objects.filter(metamask_wallet=public_address).first()
+            if user:
+                user.backend = "django.contrib.auth.backends.ModelBackend"
+                login(request, user)
+                return HttpResponseRedirect(
+                    reverse("board:index", kwargs={"username": user.username})
+                )
+            messages.add_message(request, messages.WARNING, _("Пользователь не найден"))
+        else:
+            messages.add_message(
+                request, messages.WARNING, _("Обновите страницу и попробуйте еще раз")
+            )
+    return HttpResponseRedirect(reverse("account_login"))
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):

@@ -46,6 +46,12 @@
   {% endif %}
 {% endif %}
 
+{% comment %} <p><button id="metamask-login">Login with metamask</button></p> {% endcomment %}
+
+<button type="button" onclick="web3Login()">
+  Log in with Metamask
+</button>
+
 <form class="login" method="POST" action="{% url 'account_login' %}">
   {% csrf_token %}
   {{ form|crispy }}
@@ -57,3 +63,95 @@
 </form>
 
 {% endblock %}
+
+
+{% block inline_javascript %}
+<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+<script>
+  function web3Login() {
+      /* Message subscribe */
+      try {
+          window.ethereum.request({ method: 'eth_requestAccounts' }).then(function () {
+              provider = new ethers.providers.Web3Provider(window.ethereum);
+              provider.getNetwork().then(function (result) {
+                  if (result['chainId'] != 1) {
+                      alert('Switch to Mainnet!');
+                  } else {
+                      provider.listAccounts().then(function (result) {
+                          accountAddress = result[0];
+                          signer = provider.getSigner();
+                          signer.signMessage("Sign in to our website {{ csrf_token }}").then((signature) => {web3LoginBackend(accountAddress, signature)});
+                      })
+                  }
+              })
+          })
+      } catch {
+          alert('Please install MetaMask for your browser.')
+      }
+  }
+
+  function web3LoginBackend(accountAddress, signature) {
+      /* Отправляем данные на django view */
+      let form = document.createElement('form');
+      form.action = '{% url "metamask_login" %}';
+      form.method = 'POST';
+
+      let input_csrf = document.createElement('input');
+      input_csrf.type = 'hidden';
+      input_csrf.name = 'csrfmiddlewaretoken';
+      input_csrf.value = '{{ csrf_token }}';
+      form.appendChild(input_csrf);
+
+      let input_address = document.createElement('input');
+      input_address.type = 'hidden';
+      input_address.name = 'accountAddress';
+      input_address.value = accountAddress;
+      form.appendChild(input_address);
+
+      let input_signature = document.createElement('input');
+      input_signature.type = 'hidden';
+      input_signature.name = 'signature';
+      input_signature.value = signature;
+      form.appendChild(input_signature);
+
+      document.body.appendChild(form);
+      form.submit();
+  }
+</script>
+{% comment %} <script>
+async function handleMetamaskLogin() {
+  // Check if Metamask is installed.
+  if (typeof window.ethereum === 'undefined') {
+    alert('Please install Metamask to log in.');
+    return;
+  }
+  // Get the user's Ethereum account address.
+  const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  if (accounts.length === 0) {
+    alert('Please connect your Ethereum account to Metamask to log in.');
+    return;
+  }
+  const address = accounts[0];
+  // Request signature from Metamask
+  const web3 = new Web3(window.ethereum);
+  const signature = await web3.eth.personal.sign('Sign in to our website', address);
+  console.log("Signature: ", signature);
+  // Send signature to backend for verification
+  const response = await fetch('/accounts/metamask-login/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ signature: signature }),
+  });
+  console.log("Response: ", response);
+  const data = await response.json();
+  console.log("Data: ", data);
+}
+// Attach the handler to the login button.
+const metamaskLoginButton = document.getElementById('metamask-login');
+if (metamaskLoginButton) {
+  metamaskLoginButton.addEventListener('click', handleMetamaskLogin);
+}
+</script> {% endcomment %}
+{% endblock inline_javascript %}

@@ -7,6 +7,8 @@ from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
+from backend.users.views import metamask_login
+
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
@@ -17,6 +19,7 @@ urlpatterns = [
     # User management
     path("users/", include("backend.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+    path("accounts/metamask-login/", view=metamask_login, name="metamask_login"),
     path("board/", include("backend.dashboard.urls", namespace="board")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
