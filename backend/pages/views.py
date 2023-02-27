@@ -1,9 +1,9 @@
-from django.views.generic import TemplateView
+from django.views.generic import DetailView
+
+from .models import Page
 
 
-class AboutView(TemplateView):
-    template_name = "pages/about.html"
-
-
-class PolicyView(TemplateView):
-    template_name = "pages/policy.html"
+class PageDetailView(DetailView):
+    model = Page
+    template_name = "pages/detail.html"
+    slug_url_kwarg = "slug"
