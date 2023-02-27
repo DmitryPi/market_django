@@ -189,6 +189,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "backend.users.context_processors.allauth_settings",
+                "backend.pages.context_processors.pages_qs",
             ],
         },
     }
