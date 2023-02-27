@@ -82,6 +82,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "backend.pages",
     "backend.users",
     "backend.dashboard",
 ]
