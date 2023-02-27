@@ -7,6 +7,8 @@ class Page(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(db_index=True, unique=True, max_length=110)
     content = models.TextField(blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = _("Page")
