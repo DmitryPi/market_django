@@ -1,37 +1,151 @@
-@import "custom_bootstrap_vars";
-@import "~bootstrap/scss/bootstrap";
+// @import "custom_bootstrap_vars";
+// @import "~bootstrap/scss/bootstrap";
+@import "fonts";
 
 
-// project specific CSS goes here
-
-////////////////////////////////
-//Variables//
-////////////////////////////////
-
-// Alert colors
-
-$white: #fff;
-$mint-green: #d6e9c6;
-$black: #000;
-$pink: #f2dede;
-$dark-pink: #eed3d7;
-$red: #b94a48;
-
-////////////////////////////////
-//Alerts//
-////////////////////////////////
-
-// bootstrap alert CSS, translated to the django-standard levels of
-// debug, info, success, warning, error
-
-.alert-debug {
-  background-color: $white;
-  border-color: $mint-green;
-  color: $black;
+*,
+*:before,
+*:after {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
 }
 
-.alert-error {
-  background-color: $pink;
-  border-color: $dark-pink;
-  color: $red;
+html,
+body {
+    color: #19033B;
+    font-family: 'DM Sans', sans-serif;
+    font-style: normal;
+    font-weight: 400;
 }
+
+b {
+    font-weight: 500;
+}
+
+h2 {
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+a {
+    text-decoration: none;
+    font-weight: 700;
+    color: #19033B;
+}
+
+button {
+    color: white;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.html_reg,
+.body_reg {
+    height: 100%;
+}
+
+.registration {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 1fr;
+}
+
+.right_part,
+.left_part {
+    height: 100%;
+    width: 100%;
+}
+
+.right_part {
+    background: url("../img/Background 5.4.png") center no-repeat;
+    background-size: cover;
+    border-radius: 0px 0px 0px 17%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.left_part {
+    padding-left: 59px;
+    padding-right: 43px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    flex-grow: 1;
+
+}
+
+.left_content {
+    margin-top: 227px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.right_content {
+    display: flex;
+    flex-direction: column;
+    gap: 122px;
+    align-self: center;
+    justify-content: center;
+    margin-top: 437px;
+}
+
+#start_logo {
+    width: 100%;
+    padding: 10px;
+}
+
+.title_button {
+    align-self: center;
+    background: none;
+    border-radius: 26px;
+    font-size: 1.1em;
+    padding: 22px 95px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: solid 2.2px rgba($color: #ffffff, $alpha: 0.2);
+}
+
+// Forms
+.form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 22px;
+}
+
+.form-label {
+    color: #2B3674;
+    font-size: 0.9em;
+    margin-bottom: 13px;
+}
+
+.form-control {
+    background: none;
+    border: solid 1px #E0E5F2;
+    border-radius: 0.8vw;
+    width: 100%;
+    padding-left: 24px;
+    padding-top: 18px;
+    padding-bottom: 18px;
+
+}
+
+.form-control::-webkit-input-placeholder {
+    color: #A3AED0;
+    font-size: 0.9em;
+}
+
+
+// Media
+@import "media";

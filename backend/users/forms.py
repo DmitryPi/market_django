@@ -84,6 +84,10 @@ class UserSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({"class": "form-control"})
+            self.fields[field_name].widget.attrs.update({"class": "form-control"})
+
         self.fields["email"].label = "Email"
         self.fields["email"].required = True
         self.fields["email"].widget.attrs.update({"placeholder": "mail@gmail.com"})
@@ -100,16 +104,8 @@ class UserSignupForm(SignupForm):
     def save(self, request):
         user = super().save(request)
         print(self.cleaned_data)
-        # user_type = self.cleaned_data.get("user_type")
-
-        # if user_type == User.Types.CUSTOMER:
-        #     user.is_customer = True
-        # elif user_type == User.Types.SELLER:
-        #     user.is_seller = True
-        # elif user_type == User.Types.BOTH:
-        #     user.is_customer = True
-        #     user.is_seller = True
-        # user.save()
+        # user.first_name = self.cleaned_data.get("first_name")
+        user.save()
 
         return user
 
