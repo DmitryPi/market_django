@@ -54,12 +54,12 @@ class UserSignupForm(SignupForm):
 
     field_order = [
         "first_name",
-        "second_name",
         "phone_number",
-        "email",
-        "username",
+        "second_name",
         "password1",
+        "username",
         "password2",
+        "email",
         "referral",
     ]
 
