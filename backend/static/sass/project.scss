@@ -43,6 +43,12 @@ button {
     }
 }
 
+.grey_text {
+    color: #A3AED0;
+    font-size: 1em;
+    font-weight: 400;
+}
+
 .html_reg,
 .body_reg {
     height: 100%;
@@ -125,6 +131,7 @@ button {
 }
 
 .form-label {
+    display: flex;
     color: #2B3674;
     font-size: 0.9em;
     margin-bottom: 13px;
@@ -144,6 +151,76 @@ button {
 .form-control::-webkit-input-placeholder {
     color: #A3AED0;
     font-size: 0.9em;
+}
+
+.form-submit {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkbox {
+    gap: 11px;
+    margin-top: 50px;
+}
+
+#read_white_paper {
+    width: auto;
+    margin: auto;
+    padding: auto;
+    width: auto;
+
+}
+
+#label_read_white_paper {
+    margin: auto;
+    padding: auto;
+    width: auto;
+}
+
+#registration_description {
+    margin-bottom: 1em;
+}
+
+.register_button {
+    font-weight: 700;
+    background-color: #2E016C;
+    font-size: 0.9em;
+
+    margin-top: 1.7vw;
+    border-radius: 0.8vw;
+    width: 100%;
+    padding: 20px;
+
+    &:hover {
+        background-color: #11047A;
+    }
+}
+
+#already_exist {
+    font-size: 0.9em;
+    margin-top: 26px;
+}
+
+.left_footer,
+.right_footer {
+    margin-bottom: 40px;
+    align-self: center;
+}
+
+.left_footer {
+    margin-top: 162px;
+}
+
+.right_footer {
+    margin-top: 400px;
+}
+
+.footer_link {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 0.72vw;
+    margin-left: 1vw;
+    margin-right: 1vw;
 }
 
 

@@ -105,7 +105,7 @@ class UserSignupForm(SignupForm):
         user = super().save(request)
         print(self.cleaned_data)
         # user.first_name = self.cleaned_data.get("first_name")
-        user.save()
+        # user.save()
 
         return user
 

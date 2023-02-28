@@ -1,22 +1,56 @@
 {% extends "account/base.html" %}
 
+{% load static %}
 {% load i18n %}
 {% load crispy_forms_tags %}
 
 {% block head_title %}{% translate "Signup" %}{% endblock %}
 
 {% block inner %}
-<h1>{% translate "Sign Up" %}</h1>
 
-<p>{% blocktranslate %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktranslate %}</p>
+<div class="registration">
+  <div class="left_part">
+      <div class="left_content">
+          <h2 class="title_left">Регистрация</h2>
+          <p class="grey_text" id="registration_description">Добро пожаловать в Presale PRM4ALL!</p>
+          <div class="registration_fields">
+            <form class="form signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+              {% csrf_token %}
+              {{ form|crispy }}
+              {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
+              <div class="form-submit">
+                <div class="checkbox">
+                  <input type="checkbox" id="read_white_paper" name="read_white_paper" checked>
+                  <label id="label_read_white_paper" for="read_white_paper">Я прочитал WhitePaper и принимаю все условия и политики компании.</label>
+                </div >
+                <button class="register_button" type="submit">{% translate "Sign Up" %}</button>
+              </div>
+            </form>
+          </div>
+          <p id="already_exist">Уже есть аккаунт? <a href="{% url 'account_login' %}">Войти</a></p>
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form|crispy }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button class="btn btn-primary" type="submit">{% translate "Sign Up" %} &raquo;</button>
-</form>
+      </div>
+      <div class="left_footer">
+          <p class="grey_text">© 2023 PRM4ALL. All Rights Reserved.</p>
+      </div>
+
+  </div>
+  <div class="right_part">
+      <div class="right_content">
+          <img id="start_logo" src="{% static 'img/prm4 logo.png' %}" alt="PRM4ALL">
+          <button class="title_button">Partner Relationship Management</button>
+      </div>
+      <div class="right_footer">
+          <a class="footer_link" href="#">Web 3.0</a>
+          <a class="footer_link" href="#">WhitePaper</a>
+          <a class="footer_link" href="#">Site</a>
+          <a class="footer_link" href="#">Presentation</a>
+      </div>
+  </div>
+</div>
+
+
 
 {% endblock %}
