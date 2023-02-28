@@ -7,8 +7,10 @@
 
 {% block inner %}
 
-<h2 class="title_left">Регистрация</h2>
+<h1 class="title_left">Регистрация</h1>
+
 <p class="grey_text" id="registration_description">Добро пожаловать в Presale PRM4ALL!</p>
+
 <div class="registration_fields">
   <form class="form signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
     {% csrf_token %}
@@ -21,7 +23,7 @@
         <input type="checkbox" id="read_white_paper" name="read_white_paper" checked required>
         <label id="label_read_white_paper" for="read_white_paper">Я прочитал WhitePaper и принимаю все условия и политики компании.</label>
       </div >
-      <button class="register_button" type="submit">{% translate "Sign Up" %}</button>
+      <button class="btn btn-primary" type="submit">{% translate "Sign Up" %}</button>
     </div>
   </form>
 </div>

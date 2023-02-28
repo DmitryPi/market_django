@@ -1,46 +1,11 @@
-// @import "custom_bootstrap_vars";
-// @import "~bootstrap/scss/bootstrap";
 @import "fonts";
+@import "base";
 
 
-*,
-*:before,
-*:after {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    box-sizing: border-box;
-}
-
-html,
-body {
-    color: #19033B;
-    font-family: 'DM Sans', sans-serif;
-    font-style: normal;
-    font-weight: 400;
-}
-
-b {
-    font-weight: 500;
-}
-
-h2 {
+.title_left {
     font-size: 2.2em;
     font-weight: 700;
-}
-
-a {
-    text-decoration: none;
-    font-weight: 700;
-    color: #19033B;
-}
-
-button {
-    color: white;
-
-    &:hover {
-        cursor: pointer;
-    }
+    margin-bottom: 10px;
 }
 
 .grey_text {
@@ -49,33 +14,16 @@ button {
     font-weight: 400;
 }
 
-.html_reg,
-.body_reg {
-    height: 100%;
-}
+
+// Registration pages
 
 .registration {
-    height: 100%;
-    width: 100%;
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 1fr;
+    min-height: 100vh;
 }
 
-.right_part,
-.left_part {
-    height: 100%;
-    width: 100%;
-}
-
-.right_part {
-    background: url("../img/Background 5.4.png") center no-repeat;
-    background-size: cover;
-    border-radius: 0px 0px 0px 17%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
 .left_part {
     padding-left: 59px;
@@ -96,6 +44,20 @@ button {
     justify-content: center;
     flex-direction: column;
     flex-shrink: 0;
+
+    >p {
+        margin-bottom: 2em;
+    }
+}
+
+.right_part {
+    margin: 0 0.6em 1em 0;
+    background: url("../img/Background 5.4.png") center no-repeat;
+    background-size: cover;
+    border-radius: 0px 0px 0px 17%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .right_content {
@@ -106,6 +68,22 @@ button {
     justify-content: center;
     margin-top: 437px;
 }
+
+.left_footer,
+.right_footer {
+    margin-bottom: 40px;
+    align-self: center;
+}
+
+.left_footer {
+    margin-top: 162px;
+}
+
+.right_footer {
+    position: absolute;
+    bottom: 0;
+}
+
 
 #start_logo {
     width: 100%;
@@ -145,7 +123,6 @@ button {
     padding-left: 24px;
     padding-top: 18px;
     padding-bottom: 18px;
-
 }
 
 .form-control::-webkit-input-placeholder {
@@ -177,12 +154,9 @@ button {
     width: auto;
 }
 
-#registration_description {
-    margin-bottom: 1em;
-}
-
-.register_button {
+.btn-primary {
     font-weight: 700;
+    color: #fff;
     background-color: #2E016C;
     font-size: 0.9em;
 
@@ -201,26 +175,16 @@ button {
     margin-top: 26px;
 }
 
-.left_footer,
-.right_footer {
-    margin-bottom: 40px;
-    align-self: center;
-}
-
-.left_footer {
-    margin-top: 162px;
-}
-
-.right_footer {
-    margin-top: 400px;
-}
-
 .footer_link {
     color: #ffffff;
     font-weight: 500;
     font-size: 0.72vw;
     margin-left: 1vw;
     margin-right: 1vw;
+
+    &:hover {
+        color: #A3AED0;
+    }
 }
 
 
