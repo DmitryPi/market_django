@@ -63,6 +63,24 @@ class UserSignupForm(SignupForm):
         "referral",
     ]
 
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get("first_name")
+        if not first_name:
+            raise forms.ValidationError(_("First Name is required."))
+        return first_name
+
+    def clean_second_name(self):
+        second_name = self.cleaned_data.get("second_name")
+        if not second_name:
+            raise forms.ValidationError(_("Second Name is required."))
+        return second_name
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get("phone_number")
+        if not phone_number:
+            raise forms.ValidationError(_("Phone Number is required."))
+        return phone_number
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -81,6 +99,7 @@ class UserSignupForm(SignupForm):
 
     def save(self, request):
         user = super().save(request)
+        print(self.cleaned_data)
         # user_type = self.cleaned_data.get("user_type")
 
         # if user_type == User.Types.CUSTOMER:
