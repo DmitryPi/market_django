@@ -75,6 +75,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "webpack_loader",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",

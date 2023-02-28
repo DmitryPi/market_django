@@ -13,13 +13,14 @@ eth-account==0.5.9  # https://eth-account.readthedocs.io/en/stable/eth_account.h
 
 # Django
 # ------------------------------------------------------------------------------
-django==4.1  # https://www.djangoproject.com/
+django==4.1.7  # https://www.djangoproject.com/
 django-environ==0.9.0  # https://github.com/joke2k/django-environ
 django-model-utils==4.3.1  # https://github.com/jazzband/django-model-utils
 django-allauth==0.52.0  # https://github.com/pennersr/django-allauth
 django-crispy-forms==1.14.0  # https://github.com/django-crispy-forms/django-crispy-forms
 crispy-bootstrap5==0.7  # https://github.com/django-crispy-forms/crispy-bootstrap5
 django-redis==5.2.0  # https://github.com/jazzband/django-redis
+django-webpack-loader==1.8.1  # https://github.com/django-webpack/django-webpack-loader
 # Django REST Framework
 djangorestframework==3.14.0  # https://github.com/encode/django-rest-framework
 django-cors-headers==3.13.0  # https://github.com/adamchainz/django-cors-headers

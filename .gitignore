@@ -266,3 +266,5 @@ backend/media/
 .pytest_cache/
 
 ### Project
+.PRM-main
+.my_awesome_project
