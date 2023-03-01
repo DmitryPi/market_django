@@ -39,7 +39,7 @@ class MetamaskLoginTests(TestCase):
     #     }
     #     response = self.client.post(self.url, data=data)
     #     self.assertRedirects(
-    #         response, reverse("board:index", kwargs={"username": self.user.username})
+    #         response, reverse("dashboard:index", kwargs={"username": self.user.username})
     #     )
 
     def test_invalid_login(self):

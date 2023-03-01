@@ -2,13 +2,13 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 
-from backend.users.tests.factories import UserFactory
+from backend.accounts.tests.factories import UserFactory
 
 
 class DashboardViewTests(TestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.url = reverse("board:index", kwargs={"username": self.user.username})
+        self.url = reverse("dashboard:index", kwargs={"username": self.user.username})
 
     def test_get(self):
         self.client.force_login(self.user)
@@ -24,7 +24,7 @@ class DashboardViewTests(TestCase):
 class DashboardSettingsViewTests(TestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.url = reverse("board:settings")
+        self.url = reverse("dashboard:settings")
 
     def test_get(self):
         self.client.force_login(self.user)
@@ -40,7 +40,7 @@ class DashboardSettingsViewTests(TestCase):
 class AvatarUpdateViewTests(TestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.url = reverse("board:settings_avatar_update")
+        self.url = reverse("dashboard:settings_avatar_update")
 
     def test_get(self):
         self.client.force_login(self.user)

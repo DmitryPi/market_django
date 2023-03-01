@@ -28,7 +28,7 @@ def metamask_login(request):
                 user.backend = "django.contrib.auth.backends.ModelBackend"
                 login(request, user)
                 return HttpResponseRedirect(
-                    reverse("board:index", kwargs={"username": user.username})
+                    reverse("dashboard:index", kwargs={"username": user.username})
                 )
             messages.add_message(request, messages.WARNING, _("Пользователь не найден"))
         else:

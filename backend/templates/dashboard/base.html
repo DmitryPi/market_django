@@ -13,19 +13,19 @@
                 <p class="menu_name">Dashboard</p>
                 <div class="active_line"></div>
             </a>
-            <a  href="{% url 'dashboard:index' username=user.username %}" class="menu_item">
+            <a  href="{% url 'dashboard:token' username=user.username %}" class="menu_item">
                 <img class="menu_icon" src="{% static 'img/token_icon.svg '%}" alt="">
                 <p class="menu_name">Token</p>
             </a>
-            <a  href="{% url 'dashboard:index' username=user.username %}" class="menu_item">
+            <a  href="{% url 'dashboard:team' username=user.username %}" class="menu_item">
                 <img class="menu_icon" src="{% static 'img/team_icon.svg '%}" alt="">
                 <p class="menu_name">Team</p>
             </a>
-            <a  href="{% url 'dashboard:index' username=user.username %}" class="menu_item">
+            <a  href="{% url 'dashboard:profile' username=user.username %}" class="menu_item">
                 <img class="menu_icon" src="{% static 'img/profile_icon.svg '%}" alt="">
                 <p class="menu_name">Profile</p>
             </a>
-            <a  href="{% url 'dashboard:index' username=user.username %}" class="menu_item">
+            <a  href="{% url 'account_logout' %}" class="menu_item">
                 <img class="menu_icon" src="{% static 'img/sign_out_icon.svg '%}" alt="">
                 <p class="menu_name">Sign Out</p>
             </a>

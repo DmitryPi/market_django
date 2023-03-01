@@ -16,7 +16,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # Apps
     path("pages/", include("backend.pages.urls", namespace="pages")),
-    path("dashboard/", include("backend.dashboard.urls", namespace="board")),
+    path("dashboard/", include("backend.dashboard.urls", namespace="dashboard")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import JsonResponse
 from django.urls import reverse
@@ -10,7 +11,7 @@ from .forms import AvatarUpdateForm, CustomUserUpdateForm
 User = get_user_model()
 
 
-class DashboardView(DetailView):
+class DashboardView(LoginRequiredMixin, DetailView):
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
@@ -23,7 +24,7 @@ class DashboardSettingsView(SuccessMessageMixin, UpdateView):
     success_message = _("Information successfully updated")
 
     def get_success_url(self):
-        return reverse("board:settings")
+        return reverse("dashboard:settings")
 
     def get_object(self, *args, **kwargs):
         return self.request.user
@@ -49,4 +50,6 @@ class DashboardRedirectView(RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
-        return reverse("board:index", kwargs={"username": self.request.user.username})
+        return reverse(
+            "dashboard:index", kwargs={"username": self.request.user.username}
+        )
