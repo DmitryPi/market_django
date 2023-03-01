@@ -1,4 +1,3 @@
-from allauth.account.views import LoginView, SignupView
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,14 +10,6 @@ from eth_account.messages import defunct_hash_message
 from web3.auto import w3
 
 User = get_user_model()
-
-
-class CustomSignView(LoginView):
-    template_name = "accounts/signin.html"
-
-
-class CustomSignupView(SignupView):
-    template_name = "accounts/signup.html"
 
 
 def metamask_login(request):
