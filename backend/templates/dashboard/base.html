@@ -91,5 +91,8 @@
 
     </div>
 </div >
-<script src="{% static 'scripts/menu.js' %}"></script>
 {% endblock content %}
+
+{% block inline_javascript %}
+    <script src="{% static 'js/menu.js' %}"></script>
+{% endblock inline_javascript %}
