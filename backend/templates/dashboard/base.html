@@ -8,27 +8,40 @@
     <div id="sidenav" class="sidenav">
         <div class="side_logo"></div>
         <div class="menu">
-            <a  href="{% url 'dashboard:index' username=user.username %}" class="menu_item active">
+            {% with request.resolver_match.url_name as current_url %}
+            <a href="{% url 'dashboard:index' username=user.username %}" class="menu_item{% if current_url == 'index' %} active{% endif %}">
+
                 <img class="menu_icon" src="{% static 'img/dashboard_icon_active.svg'%}" alt="">
                 <p class="menu_name">Dashboard</p>
-                <div class="active_line"></div>
+
+                {% if current_url == 'index' %}<div class="active_line"></div>{% endif %}
             </a>
-            <a  href="{% url 'dashboard:token' username=user.username %}" class="menu_item">
-                <img class="menu_icon" src="{% static 'img/token_icon.svg '%}" alt="">
+            <a href="{% url 'dashboard:token' username=user.username %}" class="menu_item{% if current_url == 'token' %} active{% endif %}">
+
+                <img class="menu_icon" src="{% static 'img/token_icon.svg '%}" alt="token">
                 <p class="menu_name">Token</p>
+
+                {% if current_url == 'token' %}<div class="active_line"></div>{% endif %}
             </a>
-            <a  href="{% url 'dashboard:team' username=user.username %}" class="menu_item">
-                <img class="menu_icon" src="{% static 'img/team_icon.svg '%}" alt="">
+            <a href="{% url 'dashboard:team' username=user.username %}" class="menu_item{% if current_url == 'team' %} active{% endif %}">
+
+                <img class="menu_icon" src="{% static 'img/team_icon.svg '%}" alt="team">
                 <p class="menu_name">Team</p>
+
+                {% if current_url == 'team' %}<div class="active_line"></div>{% endif %}
             </a>
-            <a  href="{% url 'dashboard:profile' username=user.username %}" class="menu_item">
-                <img class="menu_icon" src="{% static 'img/profile_icon.svg '%}" alt="">
+            <a href="{% url 'dashboard:profile' username=user.username %}" class="menu_item{% if current_url == 'profile' %} active{% endif %}">
+
+                <img class="menu_icon" src="{% static 'img/profile_icon.svg '%}" alt="profile">
                 <p class="menu_name">Profile</p>
+
+                {% if current_url == 'profile' %}<div class="active_line"></div>{% endif %}
             </a>
-            <a  href="{% url 'account_logout' %}" class="menu_item">
-                <img class="menu_icon" src="{% static 'img/sign_out_icon.svg '%}" alt="">
+            <a href="{% url 'account_logout' %}" class="menu_item">
+                <img class="menu_icon" src="{% static 'img/sign_out_icon.svg '%}" alt="signout">
                 <p class="menu_name">Sign Out</p>
             </a>
+            {% endwith %}
         </div>
     </div>
 
