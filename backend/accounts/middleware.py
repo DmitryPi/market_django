@@ -14,6 +14,6 @@ class AuthRequiredMiddleware:
             and "__debug__" not in request.path
             and "admin/" not in request.path
         ):
-            return redirect(reverse("account_login"))
+            return redirect(reverse("accounts:signin"))
         response = self.get_response(request)
         return response

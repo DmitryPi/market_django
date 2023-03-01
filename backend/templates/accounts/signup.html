@@ -12,7 +12,7 @@
 <p class="grey_text" id="registration_description">Добро пожаловать в Presale PRM4ALL!</p>
 
 <div class="registration_fields">
-  <form class="form signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  <form class="form signup" id="signup_form" method="post" action="{% url 'accounts:signup' %}">
     {% csrf_token %}
     {{ form|crispy }}
     {% if redirect_field_value %}
@@ -27,7 +27,7 @@
     </div>
   </form>
 </div>
-<p id="already_exist">Уже есть аккаунт? <a href="{% url 'account_login' %}">Войти</a></p>
+<p id="already_exist">Уже есть аккаунт? <a href="{% url 'accounts:signup' %}">Войти</a></p>
 
 
 

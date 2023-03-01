@@ -27,7 +27,7 @@ class MetamaskLoginTests(TestCase):
 
     def test_get(self):
         response = self.client.get(self.url)
-        self.assertRedirects(response, reverse("account_login"))
+        self.assertRedirects(response, reverse("accounts:signin"))
 
     # def test_valid_login(self):
     #     signature = "0xabcd1234"
