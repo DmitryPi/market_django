@@ -83,8 +83,8 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "backend.accounts",
     "backend.pages",
-    "backend.users",
     "backend.dashboard",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -103,7 +103,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "accounts.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
 LOGIN_REDIRECT_URL = "board:redirect"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
@@ -143,7 +143,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "backend.users.middleware.AuthRequiredMiddleware",
+    "backend.accounts.middleware.AuthRequiredMiddleware",
 ]
 
 # STATIC
@@ -189,7 +189,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "backend.users.context_processors.allauth_settings",
+                "backend.accounts.context_processors.allauth_settings",
                 "backend.pages.context_processors.pages_qs",
             ],
         },
@@ -273,13 +273,13 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "backend.users.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "backend.accounts.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-ACCOUNT_FORMS = {"signup": "backend.users.forms.UserSignupForm"}
+ACCOUNT_FORMS = {"signup": "backend.accounts.forms.UserSignupForm"}
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "backend.users.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "backend.accounts.adapters.SocialAccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-SOCIALACCOUNT_FORMS = {"signup": "backend.users.forms.UserSocialSignupForm"}
+SOCIALACCOUNT_FORMS = {"signup": "backend.accounts.forms.UserSocialSignupForm"}
 
 # django-rest-framework
 # -------------------------------------------------------------------------------

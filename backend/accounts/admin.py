@@ -2,9 +2,8 @@ from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.utils.translation import gettext_lazy as _
 
-from backend.users.forms import UserAdminChangeForm, UserAdminCreationForm
-
-from .models import Customer, Seller, User
+from .forms import UserAdminChangeForm, UserAdminCreationForm
+from .models import User
 
 
 @admin.register(User)
@@ -48,22 +47,3 @@ class UserAdmin(auth_admin.UserAdmin):
         "is_seller",
     ]
     search_fields = ["name"]
-
-
-class ProxyUserAdmin(UserAdmin):
-    list_display = [
-        "username",
-        "name",
-        "is_customer",
-        "is_seller",
-    ]
-
-
-@admin.register(Customer)
-class CustomerAdmin(ProxyUserAdmin):
-    pass
-
-
-@admin.register(Seller)
-class SellerAdmin(ProxyUserAdmin):
-    pass

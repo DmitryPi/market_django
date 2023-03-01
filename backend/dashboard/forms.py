@@ -32,7 +32,8 @@ class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            "name",
+            "first_name",
+            "second_name",
             "email",
             "phone_number",
             "date_of_birth",
