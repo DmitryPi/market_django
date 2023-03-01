@@ -33,7 +33,7 @@ class CustomUserUpdateForm(forms.ModelForm):
         model = User
         fields = [
             "first_name",
-            "second_name",
+            "last_name",
             "email",
             "phone_number",
             "date_of_birth",

@@ -35,7 +35,7 @@ class UserSignupForm(SignupForm):
         label=_("Имя"),
         widget=TextInput(attrs={"placeholder": _("First Name")}),
     )
-    second_name = forms.CharField(
+    last_name = forms.CharField(
         max_length=30,
         label=_("Фамилия"),
         widget=TextInput(attrs={"placeholder": _("Second Name")}),
@@ -55,7 +55,7 @@ class UserSignupForm(SignupForm):
     field_order = [
         "first_name",
         "phone_number",
-        "second_name",
+        "last_name",
         "password1",
         "username",
         "password2",
@@ -69,11 +69,11 @@ class UserSignupForm(SignupForm):
             raise forms.ValidationError(_("First Name is required."))
         return first_name
 
-    def clean_second_name(self):
-        second_name = self.cleaned_data.get("second_name")
-        if not second_name:
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get("last_name")
+        if not last_name:
             raise forms.ValidationError(_("Second Name is required."))
-        return second_name
+        return last_name
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get("phone_number")
@@ -105,7 +105,7 @@ class UserSignupForm(SignupForm):
         user = super().save(request)
         print(self.cleaned_data)
         # user.first_name = self.cleaned_data.get("first_name")
-        # user.second_name = self.cleaned_data.get("second_name")
+        # user.last_name = self.cleaned_data.get("last_name")
         # user.phone_number = self.cleaned_data.get("phone_number")
         # user.referral = self.cleaned_data.get("referral")
         # user.save()
