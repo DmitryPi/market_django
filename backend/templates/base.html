@@ -33,13 +33,13 @@
 
   <body>
 
-    {% if messages %}
+    {% comment %} {% if messages %}
       {% for message in messages %}
         <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
           {{ message }}
         </div>
       {% endfor %}
-    {% endif %}
+    {% endif %} {% endcomment %}
 
     {% block content %}
       <p>Use this document as a way to quick start any new project.</p>

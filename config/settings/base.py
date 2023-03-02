@@ -274,6 +274,8 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True  # change confirmation to js-ajax
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_LOGOUT_REDIRECT_URL = "account_login"
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_ADAPTER = "backend.accounts.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
 ACCOUNT_FORMS = {"signup": "backend.accounts.forms.UserSignupForm"}

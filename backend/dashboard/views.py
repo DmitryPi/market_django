@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView, View
@@ -9,6 +10,16 @@ from django.views.generic import DetailView, RedirectView, UpdateView, View
 from .forms import AvatarUpdateForm, CustomUserUpdateForm
 
 User = get_user_model()
+
+
+class HomeRedirectView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect(
+                reverse("dashboard:index", kwargs={"username": request.user.username}),
+                permanent=False,
+            )
+        return redirect(reverse("account_login"), permanent=False)
 
 
 class DashboardView(LoginRequiredMixin, DetailView):
