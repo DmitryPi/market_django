@@ -102,10 +102,18 @@
 }
 
 // Forms
+
 .form {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: 24px 22px;
+}
+
+.form-lg {
+    grid-template-columns: 1fr 1fr
+}
+
+.form-content-sm {
+    max-width: 410px;
 }
 
 .control-group {
@@ -343,15 +351,6 @@
     background-color: #F4F7FE;
     display: flex;
     color: #2B3674;
-}
-
-button {
-    background-color: #11047A;
-    border-radius: 70px;
-    padding: 10px 14px;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 400;
 }
 
 .sidenav {

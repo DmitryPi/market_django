@@ -8,7 +8,7 @@
 
 <div class="registration">
   <div class="left_part">
-      <div class="left_content">
+      <div class="left_content {% block form_size %}form-content-sm{% endblock form_size %}">
         <h1 class="title_left">
             {% block page_title %}{% endblock page_title %}
         </h1>
@@ -20,7 +20,6 @@
       <div class="left_footer">
           <p class="grey_text">© {% now "Y" %} PRM4ALL. All Rights Reserved.</p>
       </div>
-
   </div>
   <div class="right_part">
       <div class="right_content">

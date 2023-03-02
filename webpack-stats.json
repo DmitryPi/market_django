@@ -36,15 +36,15 @@
       "path": "D:\\work\\market_django\\backend\\static\\webpack_bundles\\94cc4d1f0a1434e41a31.png",
       "publicPath": "/static/webpack_bundles/94cc4d1f0a1434e41a31.png"
     },
-    "css/project.6a540908b5f8e1633860.css": {
-      "name": "css/project.6a540908b5f8e1633860.css",
-      "path": "D:\\work\\market_django\\backend\\static\\webpack_bundles\\css\\project.6a540908b5f8e1633860.css",
-      "publicPath": "/static/webpack_bundles/css/project.6a540908b5f8e1633860.css"
+    "css/project.cf0085e576741b542129.css": {
+      "name": "css/project.cf0085e576741b542129.css",
+      "path": "D:\\work\\market_django\\backend\\static\\webpack_bundles\\css\\project.cf0085e576741b542129.css",
+      "publicPath": "/static/webpack_bundles/css/project.cf0085e576741b542129.css"
     },
-    "css/project.6a540908b5f8e1633860.css.map": {
-      "name": "css/project.6a540908b5f8e1633860.css.map",
-      "path": "D:\\work\\market_django\\backend\\static\\webpack_bundles\\css\\project.6a540908b5f8e1633860.css.map",
-      "publicPath": "/static/webpack_bundles/css/project.6a540908b5f8e1633860.css.map"
+    "css/project.cf0085e576741b542129.css.map": {
+      "name": "css/project.cf0085e576741b542129.css.map",
+      "path": "D:\\work\\market_django\\backend\\static\\webpack_bundles\\css\\project.cf0085e576741b542129.css.map",
+      "publicPath": "/static/webpack_bundles/css/project.cf0085e576741b542129.css.map"
     },
     "d39118ecd7b4cd47fe93.jpeg": {
       "name": "d39118ecd7b4cd47fe93.jpeg",
@@ -56,24 +56,24 @@
       "path": "D:\\work\\market_django\\backend\\static\\webpack_bundles\\e53c3ef4904137eeb2f2.png",
       "publicPath": "/static/webpack_bundles/e53c3ef4904137eeb2f2.png"
     },
-    "js/project-4fd90722a1c703c4e326.js": {
-      "name": "js/project-4fd90722a1c703c4e326.js",
-      "path": "D:\\work\\market_django\\backend\\static\\webpack_bundles\\js\\project-4fd90722a1c703c4e326.js",
-      "publicPath": "/static/webpack_bundles/js/project-4fd90722a1c703c4e326.js"
+    "js/project-194f61b852897ae9ecd8.js": {
+      "name": "js/project-194f61b852897ae9ecd8.js",
+      "path": "D:\\work\\market_django\\backend\\static\\webpack_bundles\\js\\project-194f61b852897ae9ecd8.js",
+      "publicPath": "/static/webpack_bundles/js/project-194f61b852897ae9ecd8.js"
     },
-    "js/vendors-4fd90722a1c703c4e326.js": {
-      "name": "js/vendors-4fd90722a1c703c4e326.js",
-      "path": "D:\\work\\market_django\\backend\\static\\webpack_bundles\\js\\vendors-4fd90722a1c703c4e326.js",
-      "publicPath": "/static/webpack_bundles/js/vendors-4fd90722a1c703c4e326.js"
+    "js/vendors-194f61b852897ae9ecd8.js": {
+      "name": "js/vendors-194f61b852897ae9ecd8.js",
+      "path": "D:\\work\\market_django\\backend\\static\\webpack_bundles\\js\\vendors-194f61b852897ae9ecd8.js",
+      "publicPath": "/static/webpack_bundles/js/vendors-194f61b852897ae9ecd8.js"
     }
   },
   "chunks": {
     "project": [
-      "js/project-4fd90722a1c703c4e326.js",
-      "css/project.6a540908b5f8e1633860.css"
+      "js/project-194f61b852897ae9ecd8.js",
+      "css/project.cf0085e576741b542129.css"
     ],
     "vendors": [
-      "js/vendors-4fd90722a1c703c4e326.js"
+      "js/vendors-194f61b852897ae9ecd8.js"
     ]
   },
   "publicPath": "/static/webpack_bundles/"
