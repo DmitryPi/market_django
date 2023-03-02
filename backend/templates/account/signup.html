@@ -5,12 +5,11 @@
 
 {% block head_title %}{% translate "Signup" %}{% endblock %}
 
+{% block page_title %}Регистрация{% endblock page_title %}
+
+{% block page_subtitle %}Добро пожаловать в Presale PRM4ALL!{% endblock page_subtitle %}
+
 {% block inner %}
-
-<h1 class="title_left">Регистрация</h1>
-
-<p class="grey_text" id="registration_description">Добро пожаловать в Presale PRM4ALL!</p>
-
 <div class="registration_fields">
   <form class="form signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
     {% csrf_token %}
@@ -28,7 +27,4 @@
   </form>
 </div>
 <p id="already_exist">Уже есть аккаунт? <a href="{% url 'account_login' %}">Войти</a></p>
-
-
-
 {% endblock %}

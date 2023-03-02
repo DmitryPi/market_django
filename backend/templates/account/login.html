@@ -5,12 +5,11 @@
 
 {% block head_title %}{% translate "Sign In" %}{% endblock %}
 
+{% block page_title %}{% translate "Sign In" %}{% endblock page_title %}
+
+{% block page_subtitle %}Введите ваш  email и пароль для входа.{% endblock page_subtitle %}
+
 {% block inner %}
-
-<h1 class="title_left">Вход</h1>
-
-<p class="grey_text" id="registration_description">Введите ваш  email и пароль для входа.</p>
-
 <div class="registration_fields">
     <form class="form login" method="POST" action="{% url 'account_login' %}">
       {% csrf_token %}
@@ -23,7 +22,6 @@
       </a>
       <button class="btn btn-primary" type="submit">{% translate "Sign In" %}</button>
     </form>
-
 </div>
 
 {% if ACCOUNT_ALLOW_REGISTRATION %}

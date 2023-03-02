@@ -108,27 +108,30 @@
     gap: 24px 22px;
 }
 
-.form-label {
-    display: flex;
-    color: #2B3674;
-    font-size: 0.9em;
-    margin-bottom: 13px;
+.control-group {
+    .control-label {
+        display: flex;
+        color: #2B3674;
+        font-size: 0.9em;
+        margin-bottom: 13px;
+    }
+
+    .textInput {
+        background: none;
+        border: solid 1px #E0E5F2;
+        border-radius: 0.8vw;
+        width: 100%;
+        padding-left: 24px;
+        padding-top: 18px;
+        padding-bottom: 18px;
+    }
+
+    .textInput::-webkit-input-placeholder {
+        color: #A3AED0;
+        font-size: 0.9em;
+    }
 }
 
-.form-control {
-    background: none;
-    border: solid 1px #E0E5F2;
-    border-radius: 0.8vw;
-    width: 100%;
-    padding-left: 24px;
-    padding-top: 18px;
-    padding-bottom: 18px;
-}
-
-.form-control::-webkit-input-placeholder {
-    color: #A3AED0;
-    font-size: 0.9em;
-}
 
 .form-submit {
     display: flex;
@@ -154,16 +157,20 @@
     width: auto;
 }
 
+.btn {
+    width: 100%;
+    text-align: center;
+}
+
 .btn-primary {
+    padding: 20px;
+    font-size: 0.9em;
     font-weight: 700;
     color: #fff;
     background-color: #2E016C;
-    font-size: 0.9em;
 
     margin-top: 1.7vw;
     border-radius: 0.8vw;
-    width: 100%;
-    padding: 20px;
 
     &:hover {
         background-color: #11047A;

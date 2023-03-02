@@ -9,6 +9,12 @@
 <div class="registration">
   <div class="left_part">
       <div class="left_content">
+        <h1 class="title_left">
+            {% block page_title %}{% endblock page_title %}
+        </h1>
+        <p class="grey_text" id="registration_description">
+            {% block page_subtitle %}{% endblock page_subtitle %}
+        </p>
         {% block inner %}{% endblock %}
       </div>
       <div class="left_footer">

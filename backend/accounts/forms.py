@@ -84,10 +84,6 @@ class UserSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({"class": "form-control"})
-            self.fields[field_name].widget.attrs.update({"class": "form-control"})
-
         self.fields["email"].label = "Email"
         self.fields["email"].required = True
         self.fields["email"].widget.attrs.update({"placeholder": "mail@gmail.com"})
