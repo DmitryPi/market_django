@@ -12,6 +12,9 @@ User = get_user_model()
 class UserAdmin(auth_admin.UserAdmin):
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
+    readonly_fields = [
+        "referral_code",
+    ]
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         (
@@ -25,6 +28,7 @@ class UserAdmin(auth_admin.UserAdmin):
                     "date_of_birth",
                     "city",
                     "metamask_wallet",
+                    "referral_code",
                     "avatar",
                 )
             },

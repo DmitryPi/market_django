@@ -1,3 +1,8 @@
-from django.contrib import admin  # noqa
+from django.contrib import admin
 
-# Register your models here.
+from .models import Referral
+
+
+@admin.register(Referral)
+class ReferralAdmin(admin.ModelAdmin):
+    pass
