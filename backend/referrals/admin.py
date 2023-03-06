@@ -5,4 +5,4 @@ from .models import Referral
 
 @admin.register(Referral)
 class ReferralAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["__str__", "created_at"]
