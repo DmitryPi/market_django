@@ -5,7 +5,7 @@ from .factories import Page, PageFactory
 
 class PageTests(TestCase):
     def setUp(self):
-        self.batch_size = 5
+        self.batch_size = 2
         self.pages = PageFactory.create_batch(self.batch_size)
 
     def test_create(self):

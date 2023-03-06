@@ -35,10 +35,12 @@ class Referral(models.Model):
     def clean(self):
         # Check if referrer refers to himself
         if self.referred_user == self.referrer:
-            raise ValidationError(_("Referrer and referred user cannot be the same."))
+            raise ValidationError(
+                {"referred_user": _("Referrer and referred user cannot be the same.")}
+            )
         # Check if referral link already exists
         existing_referral = Referral.objects.filter(
             referrer=self.referrer, referred_user=self.referred_user
         ).first()
-        if existing_referral and existing_referral != self:
-            raise ValidationError(_("This referral already exists."))
+        if existing_referral != self:
+            raise ValidationError({"referred_user": _("This referral already exists.")})
