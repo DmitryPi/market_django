@@ -1,38 +1,23 @@
 from django.urls import path
-from django.views.generic import TemplateView
 
 from .apps import DashboardConfig
 from .views import (
     AvatarUpdateView,
+    DashboardIndexView,
+    DashboardProfileView,
     DashboardRedirectView,
-    DashboardSettingsView,
-    DashboardView,
+    DashboardTeamView,
+    DashboardTokenView,
 )
 
 app_name = DashboardConfig.verbose_name
 
 urlpatterns = [
+    path("", view=DashboardRedirectView.as_view(), name="home-redirect"),
     path("~redirect/", view=DashboardRedirectView.as_view(), name="redirect"),
-    path("~settings/", DashboardSettingsView.as_view(), name="settings"),
-    path(
-        "~settings/avatar-update/",
-        AvatarUpdateView.as_view(),
-        name="settings_avatar_update",
-    ),
-    path("<str:username>/", DashboardView.as_view(), name="index"),
-    path(
-        "<str:username>/token/",
-        TemplateView.as_view(template_name="dashboard/token.html"),
-        name="token",
-    ),
-    path(
-        "<str:username>/team/",
-        TemplateView.as_view(template_name="dashboard/team.html"),
-        name="team",
-    ),
-    path(
-        "<str:username>/profile/",
-        TemplateView.as_view(template_name="dashboard/profile.html"),
-        name="profile",
-    ),
+    path("~avatar-update/", AvatarUpdateView.as_view(), name="avatar_update"),
+    path("<str:username>/", DashboardIndexView.as_view(), name="index"),
+    path("<str:username>/token/", DashboardTokenView.as_view(), name="token"),
+    path("<str:username>/team/", DashboardTeamView.as_view(), name="team"),
+    path("<str:username>/profile/", DashboardProfileView.as_view(), name="profile"),
 ]

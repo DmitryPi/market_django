@@ -62,8 +62,10 @@ target/
 # pyenv
 .python-version
 
+# celery beat schedule file
+celerybeat-schedule
+
 # Environments
-.env
 .venv
 venv/
 ENV/
@@ -148,10 +150,10 @@ typings/
 
 ### VisualStudioCode template
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# !.vscode/settings.json
+# !.vscode/tasks.json
+# !.vscode/launch.json
+# !.vscode/extensions.json
 *.code-workspace
 
 # Local History for Visual Studio Code
@@ -261,10 +263,13 @@ tags
 dump.rdb
 
 ### Project template
-backend/media/
+prm/media/*
+!prm/media/avatars
+prm/media/avatars/*
+!prm/media/avatars/default.png
 
 .pytest_cache/
-
-### Project
-.PRM-main
-.my_awesome_project
+.ipython/
+.env
+.envs/*
+!.envs/.local/

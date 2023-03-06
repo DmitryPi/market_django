@@ -2,12 +2,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView, View
 
-from .forms import AvatarUpdateForm, CustomUserUpdateForm
+from .forms import AvatarUpdateForm, BuyTokenForm, CustomUserUpdateForm
 
 User = get_user_model()
 
@@ -22,26 +22,70 @@ class HomeRedirectView(View):
         return redirect(reverse("account_login"), permanent=False)
 
 
-class DashboardView(LoginRequiredMixin, DetailView):
+class DashboardRedirectView(LoginRequiredMixin, RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse(
+            "dashboard:index", kwargs={"username": self.request.user.username}
+        )
+
+
+class DashboardIndexView(LoginRequiredMixin, DetailView):
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
     template_name = "dashboard/index.html"
 
 
-class DashboardSettingsView(SuccessMessageMixin, UpdateView):
+class DashboardTokenView(LoginRequiredMixin, View):
+    template_name = "dashboard/token.html"
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        buy_token_form = BuyTokenForm()
+        context = {"user": user, "buy_token_form": buy_token_form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = BuyTokenForm(request.POST)
+        if form.is_valid():
+            # token_amount = form.cleaned_data['token_amount']
+            # token_price_usdt = form.cleaned_data['token_price_usdt']
+            return redirect(
+                reverse(
+                    "dashboard:token", kwargs={"username": self.request.user.username}
+                )
+            )
+        user = self.request.user
+        context = {"user": user, "buy_token_form": form}
+        return render(request, self.template_name, context)
+
+
+class DashboardTeamView(LoginRequiredMixin, DetailView):
+    model = User
+    slug_field = "username"
+    slug_url_kwarg = "username"
+    template_name = "dashboard/team.html"
+
+
+class DashboardProfileView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     form_class = CustomUserUpdateForm
-    template_name = "dashboard/settings.html"
+    slug_field = "username"
+    slug_url_kwarg = "username"
+    template_name = "dashboard/profile.html"
     success_message = _("Information successfully updated")
 
     def get_success_url(self):
-        return reverse("dashboard:settings")
+        return reverse(
+            "dashboard:profile", kwargs={"username": self.request.user.username}
+        )
 
     def get_object(self, *args, **kwargs):
         return self.request.user
 
 
-class AvatarUpdateView(View):
+class AvatarUpdateView(LoginRequiredMixin, View):
     def post(self, request):
         form = AvatarUpdateForm(request.POST, request.FILES)
         if form.is_valid() and request.FILES:
@@ -55,12 +99,3 @@ class AvatarUpdateView(View):
             error.message for error_list in errors.values() for error in error_list
         ]
         return JsonResponse({"error": error_messages}, status=400)
-
-
-class DashboardRedirectView(RedirectView):
-    permanent = False
-
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse(
-            "dashboard:index", kwargs={"username": self.request.user.username}
-        )

@@ -1,32 +1,22 @@
-{% load static i18n %}{% load render_bundle from webpack_loader %}<!DOCTYPE html>
+{% load static i18n %}<!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% block title %}Market{% endblock title %}</title>
+    <title>{% block title %}PRM{% endblock title %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Behold My Awesome Project!">
-    <meta name="author" content="Endless Pursuit">
+    <meta name="description" content="PRM описание!">
+    <meta name="author" content="">
 
     <link rel="icon" href="{% static 'img/favicons/favicon.ico' %}">
 
     {% block css %}
-    <!-- Your stuff: Third-party CSS libraries go here -->
-
-    <!-- This file stores project-specific CSS -->
-    {% render_bundle 'project' 'css' %}
+      <link href="{% static 'css/project.min.css' %}" rel="stylesheet">
     {% endblock %}
-    <!-- Le javascript
-    ================================================== -->
-    {# Placed at the top of the document so pages load faster with defer #}
+
     {% block javascript %}
-      <!-- Vendor dependencies bundled as one file -->
-      {% render_bundle 'vendors' 'js' attrs='defer' %}
-
-      <!-- place project specific Javascript in this file -->
-      {% render_bundle 'project' 'js' attrs='defer' %}
-
+      <script defer src="{% static 'js/project.min.js' %}"></script>
     {% endblock javascript %}
 
   </head>
@@ -42,13 +32,12 @@
     {% endif %} {% endcomment %}
 
     {% block content %}
-      <p>Use this document as a way to quick start any new project.</p>
     {% endblock content %}
-
 
     {% block modal %}{% endblock modal %}
 
     {% block inline_javascript %}
     {% endblock inline_javascript %}
+
   </body>
 </html>
