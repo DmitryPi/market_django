@@ -68,7 +68,12 @@ class TokenPurchase(models.Model):
         verbose_name_plural = _("Token Purchases")
         ordering = ["-created_at"]
 
+    # Relations
     user = models.ForeignKey(User, on_delete=models.PROTECT)
+    # Fields
     amount = models.PositiveIntegerField()
     total_cost = models.DecimalField(max_digits=12, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.amount} - {self.total_cost}"
