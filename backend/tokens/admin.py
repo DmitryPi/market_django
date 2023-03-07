@@ -5,7 +5,7 @@ from .models import Token, TokenPurchase, TokenRound
 
 @admin.register(Token)
 class TokenAdmin(admin.ModelAdmin):
-    list_display = ["name", "total_amount", "total_sold"]
+    list_display = ["name", "total_amount", "total_amount_sold"]
 
 
 @admin.register(TokenRound)

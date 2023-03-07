@@ -20,7 +20,7 @@ class Token(models.Model):
         _("Название"), unique=True, db_index=True, max_length=50, default="Token"
     )
     total_amount = models.PositiveIntegerField(_("Осталось токенов"))
-    total_sold = models.PositiveIntegerField(_("Продано токенов"), default=0)
+    total_amount_sold = models.PositiveIntegerField(_("Продано токенов"), default=0)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -58,7 +58,7 @@ class TokenRound(models.Model):
             raise ValidationError({"unit_price": _("Price can't be less then 0.")})
 
     @property
-    def progress_percent(self):
+    def progress(self):
         pass
 
 

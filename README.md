@@ -102,7 +102,7 @@ classDiagram
         active_round = OneToMany
         name
         total_amount = PositiveIntegerField
-        total_sold = PositiveIntegerField
+        total_amount_sold = PositiveIntegerField
         updated_at
         total_amount_left()
     }
@@ -115,7 +115,7 @@ classDiagram
         is_active
         is_completed
         updated_at
-        progress_percent()
+        progress()
     }
 
     class TokenPurchase {
