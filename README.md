@@ -97,6 +97,7 @@ classDiagram
 classDiagram
 
     Token --o TokenRound : OneToMany
+    User --o TokenPurchase : OneToMany
 
     class Token {
         active_round = OneToMany
