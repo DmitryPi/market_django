@@ -66,7 +66,7 @@ classDiagram
         token_balance = Integer/Decimal
         metamask_id = CharField[max_length=100]
         is_metamask_confirmed = BooleanField
-        token_balance_sum()
+        token_balance_usd()
     }
 
     class Settings {
@@ -121,8 +121,9 @@ classDiagram
     class TokenPurchase {
         user = OneToMany[User]
         amount = PositiveIntegerField
-        total_cost = DecimalField
+        unit_price = DecimalField
         created_at
+        total_cost()
     }
 ```
 

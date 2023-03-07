@@ -28,7 +28,7 @@ class Token(models.Model):
 
     @property
     def total_amount_left(self):
-        return self.total_amount - self.total_sold
+        return self.total_amount - self.total_amount_sold
 
 
 class TokenRound(models.Model):
@@ -72,8 +72,12 @@ class TokenPurchase(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     # Fields
     amount = models.PositiveIntegerField()
-    total_cost = models.DecimalField(max_digits=12, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=3)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.amount} - {self.total_cost}"
+
+    @property
+    def total_cost(self):
+        return self.unit_price * self.amount
