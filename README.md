@@ -30,6 +30,8 @@
 
 4. users
     - Модели (User, Settings, Wallet)
+    - Реферальный код можно убрать, если он дублирует username
+    - Wallet/Settings можно держать в User, в зависимости от масштаба
 
 ---
 
@@ -53,9 +55,13 @@ classDiagram
         email = CharField[blank=True, max_length=254]
         phone_number = CharField[blank=True, max_length=30]
         referral_code = CharField[unique=True, max_length=150]
+        is_active
+        is_staff
+        is_superuser
     }
 
     class Wallet {
+        # Отдельно или в User
         user = OneToOne[User, on_delete=PROTECT/CASCADE]
         token_balance = Integer/Decimal
         metamask_id = CharField[max_length=100]
@@ -73,7 +79,7 @@ classDiagram
 
     class Referral {
         referrer = OneToMany[User]
-        referred_user = OneToOne[User]
+        referred = OneToOne[User]
         created_at
     }
 
@@ -90,28 +96,32 @@ classDiagram
 
 classDiagram
 
+    Token --o TokenRound : OneToMany
+
     class Token {
-        name = CharField[default="Token"]
-        unit_price = DecimalField[max_digits=10, decimal_places=3]
+        active_round = OneToMany
+        name
         total_amount = PositiveIntegerField
         total_sold = PositiveIntegerField
-        calc_total_amount_left()
+        updated_at
+        total_amount_left()
     }
 
     class TokenRound {
-        unit_price
-        full_price
-        price_increment
-        is_active = BooleanField
-        is_complete = BooleanField
-        round_progress()
-        full_price()
+        currency = CharField
+        unit_price = DecimalField
+        total_cost = PositiveIntegerField
+        percent_share = PositiveSmallIntegerField
+        is_active
+        is_completed
+        updated_at
+        progress_percent()
     }
 
     class TokenPurchase {
-        user
-        amount
-        sum
+        user = OneToMany[User]
+        amount = PositiveIntegerField
+        total_cost = DecimalField
         created_at
     }
 ```
