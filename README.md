@@ -9,6 +9,113 @@
     - При регистрации пользователя по реферальной ссылке, мы добавляем этого реферала пользователю
     - Бонусная программа
 
+## Архитектура
+
+---
+Разделение на 4 слоя
+
+1. dashboard
+    - Выводит данные токенов и пользователя
+    - Обрабатывает формы
+
+2. referrals
+    - Модели (Referral, PurchaseReward)
+    - Логика
+    - Views - редиректы для перехода по ссылке
+
+3. tokens
+    - Модели (Token, TokenRound, TokenPurchase)
+    - Бизнес логика
+    - Переодические задачи по обновлению
+
+4. users
+    - Модели (User, Settings, Wallet)
+
+---
+
+
+```mermaid
+---
+title: Модели пользователя
+---
+classDiagram
+    User -- Wallet : OneToOne
+    User -- Settings : OneToOne
+    User --o Referral : OneToMany
+    Referral --o PurchaseReward : OneToMany
+    User --o PurchaseReward : OneToMany
+
+    class User {
+        # Некоторые поля django пропущены
+        username = CharField[unique=True]
+        first_name = CharField[blank=True, max_length=150]
+        last_name = CharField[blank=True, max_length=150]
+        email = CharField[blank=True, max_length=254]
+        phone_number = CharField[blank=True, max_length=30]
+        referral_code = CharField[unique=True, max_length=150]
+    }
+
+    class Wallet {
+        user = OneToOne[User, on_delete=PROTECT/CASCADE]
+        token_balance = Integer/Decimal
+        metamask_id = CharField[max_length=100]
+        is_metamask_confirmed = BooleanField
+        token_balance_sum()
+    }
+
+    class Settings {
+        # Отдельно или в User
+        user = OneToOne[User, on_delete=PROTECT/CASCADE]
+        birthday = DateField[blank=True, null=True]
+        city = CharField[blank=True, max_length=50]
+        avatar = ImageField[upload_to="avatars/"]
+    }
+
+    class Referral {
+        referrer = OneToMany[User]
+        referred_user = OneToOne[User]
+        created_at
+    }
+
+    class PurchaseReward {
+        to = OneToMany[User]
+        from = [User]
+        type = buy|bonus
+        token_amount
+        created_at
+    }
+```
+
+```mermaid
+
+classDiagram
+
+    class Token {
+        name = CharField[default="Token"]
+        unit_price = DecimalField[max_digits=10, decimal_places=3]
+        total_amount = PositiveIntegerField
+        total_sold = PositiveIntegerField
+        calc_total_amount_left()
+    }
+
+    class TokenRound {
+        unit_price
+        full_price
+        price_increment
+        is_active = BooleanField
+        is_complete = BooleanField
+        round_progress()
+        full_price()
+    }
+
+    class TokenPurchase {
+        user
+        amount
+        sum
+        created_at
+    }
+```
+
 
 ## Цели
 

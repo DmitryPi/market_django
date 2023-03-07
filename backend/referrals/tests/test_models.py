@@ -21,7 +21,9 @@ class ReferralTests(TestCase):
         self.assertEqual(Referral.objects.count(), 0)
 
     def test_delete_cascade(self):
-        pass
+        ReferralFactory(referrer=self.user, referred_user=self.user_1)
+        self.user.delete()
+        self.assertFalse(Referral.objects.count())
 
     def test_fields(self):
         referral = ReferralFactory()
