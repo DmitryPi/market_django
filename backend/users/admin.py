@@ -13,7 +13,7 @@ class UserAdmin(auth_admin.UserAdmin):
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
+        (None, {"fields": ("username", "password", "parent")}),
         (
             _("Personal info"),
             {
@@ -45,6 +45,7 @@ class UserAdmin(auth_admin.UserAdmin):
     )
     list_display = [
         "username",
+        "parent",
         "first_name",
         "last_name",
         "is_superuser",

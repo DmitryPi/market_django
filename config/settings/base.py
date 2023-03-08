@@ -84,7 +84,7 @@ LOCAL_APPS = [
     "backend.users",
     "backend.dashboard",
     "backend.pages",
-    "backend.referrals",
+    # "backend.referrals",
     "backend.tokens",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
