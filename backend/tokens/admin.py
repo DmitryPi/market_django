@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Token, TokenPurchase, TokenRound
+from .models import Token, TokenOrder, TokenRound
 
 
 @admin.register(Token)
@@ -15,10 +15,10 @@ class TokenRoundAdmin(admin.ModelAdmin):
         "total_cost",
         "percent_share",
         "is_active",
-        "is_completed",
+        "is_complete",
     ]
 
 
-@admin.register(TokenPurchase)
-class TokenPurchaseAdmin(admin.ModelAdmin):
-    list_display = ["user", "amount", "total_cost", "created_at"]
+@admin.register(TokenOrder)
+class TokenOrderAdmin(admin.ModelAdmin):
+    list_display = ["buyer", "buyer_parent", "type", "amount", "reward", "price_sum"]

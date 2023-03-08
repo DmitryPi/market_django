@@ -20,17 +20,17 @@
 
 2. referrals
     - Модели (Referral, PurchaseReward)
-    - Логика
+    - Логика рефералов
     - Views - редиректы для перехода по ссылке
 
 3. tokens
     - Модели (Token, TokenRound, TokenPurchase)
     - Бизнес логика
-    - Переодические задачи по обновлению
+    - Переодические задачи по обновлению токена
 
 4. users
     - Модели (User, Settings, Wallet)
-    - Реферальный код можно убрать, если он дублирует username
+    - Реферальный код можно убрать, т.к. он дублирует username
     - Wallet/Settings можно держать в User, в зависимости от масштаба
 
 ---
@@ -38,31 +38,27 @@
 
 ```mermaid
 ---
-title: Модели пользователя
+title: Модели
 ---
 classDiagram
-    User -- Wallet : OneToOne
     User -- Settings : OneToOne
     User --o Referral : OneToMany
-    Referral --o PurchaseReward : OneToMany
-    User --o PurchaseReward : OneToMany
+    Token --o TokenRound : OneToMany
+    User --o TokenOrder : OneToMany
+    TokenRound --o TokenOrder : OneToMany
+    Referral -- TokenOrder : OneToOne
+    TokenOrder -- TokenReward : Proxy
+    TokenOrder -- TokenPurchase : Proxy
 
     class User {
-        # Некоторые поля django пропущены
         username = CharField[unique=True]
         first_name = CharField[blank=True, max_length=150]
         last_name = CharField[blank=True, max_length=150]
         email = CharField[blank=True, max_length=254]
         phone_number = CharField[blank=True, max_length=30]
-        referral_code = CharField[unique=True, max_length=150]
-        is_active
-        is_staff
-        is_superuser
-    }
-
-    class Wallet {
-        # Отдельно или в User
-        user = OneToOne[User, on_delete=PROTECT/CASCADE]
+        avatar = ImageField[upload_to="avatars/"]
+        date_joined
+        -
         token_balance = Integer/Decimal
         metamask_id = CharField[max_length=100]
         is_metamask_confirmed = BooleanField
@@ -70,37 +66,20 @@ classDiagram
     }
 
     class Settings {
-        # Отдельно или в User
-        user = OneToOne[User, on_delete=PROTECT/CASCADE]
+        user = OneToOne[User, on_delete=CASCADE]
+        -
         birthday = DateField[blank=True, null=True]
         city = CharField[blank=True, max_length=50]
-        avatar = ImageField[upload_to="avatars/"]
     }
 
     class Referral {
-        referrer = OneToMany[User]
-        referred = OneToOne[User]
-        created_at
+        parent = OneToMany[User]
+        child = OneToOne[User]
     }
-
-    class PurchaseReward {
-        to = OneToMany[User]
-        from = [User]
-        type = buy|bonus
-        token_amount
-        created_at
-    }
-```
-
-```mermaid
-
-classDiagram
-
-    Token --o TokenRound : OneToMany
-    User --o TokenPurchase : OneToMany
 
     class Token {
         active_round = OneToMany
+        -
         name
         total_amount = PositiveIntegerField
         total_amount_sold = PositiveIntegerField
@@ -114,17 +93,33 @@ classDiagram
         total_cost = PositiveIntegerField
         percent_share = PositiveSmallIntegerField
         is_active
-        is_completed
+        is_complete
         updated_at
         progress()
     }
 
-    class TokenPurchase {
-        user = OneToMany[User]
+    class TokenOrder {
+        buyer = OneToMany[User]
+        buyer_parent = OneToOne[Referral, null=True]
+        token_round = OneToMany[TokenRound]
+        -
+        type = purchase|reward
         amount = PositiveIntegerField
-        unit_price = DecimalField
+        price_sum = DecimalField
+        reward = PositiveIntegerField
         created_at
         total_cost()
+    }
+
+    class TokenPurchase {
+        type = purchase
+        amount = PositiveIntegerField
+    }
+
+    class TokenReward {
+        type = reward
+        amount = PositiveIntegerField
+        reward = PositiveIntegerField
     }
 ```
 

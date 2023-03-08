@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from backend.referrals.models import Referral
+
 User = get_user_model()
 
 
@@ -47,7 +49,7 @@ class TokenRound(models.Model):
     total_cost = models.PositiveIntegerField(_("Цена за все"))
     percent_share = models.PositiveSmallIntegerField(_("Доля"))
     is_active = models.BooleanField(_("Активен"), default=False)
-    is_completed = models.BooleanField(_("Завершен"), default=False)
+    is_complete = models.BooleanField(_("Завершен"), default=False)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -62,22 +64,33 @@ class TokenRound(models.Model):
         pass
 
 
-class TokenPurchase(models.Model):
+class TokenOrder(models.Model):
     class Meta:
-        verbose_name = _("Token Purchase")
-        verbose_name_plural = _("Token Purchases")
+        verbose_name = _("Token Order")
+        verbose_name_plural = _("Token Orders")
         ordering = ["-created_at"]
 
+    class Type(models.TextChoices):
+        PURCHASE = _("Purchase"), _("Purchase")
+        REWARD = _("Reward"), _("Reward")
+
     # Relations
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    buyer = models.ForeignKey(User, on_delete=models.PROTECT)
+    buyer_parent = models.OneToOneField(
+        Referral, on_delete=models.PROTECT, blank=True, null=True
+    )
+    token_round = models.ForeignKey(TokenRound, on_delete=models.PROTECT)
     # Fields
-    amount = models.PositiveIntegerField()
-    unit_price = models.DecimalField(max_digits=6, decimal_places=3)
+    type = models.CharField(
+        _("Тип"), max_length=20, choices=Type.choices, default=Type.PURCHASE
+    )
+    amount = models.PositiveIntegerField(_("Количество"))
+    reward = models.PositiveIntegerField(_("Награда"), blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.amount} - {self.total_cost}"
+        return f"{self.buyer.username} - {self.amount} - {self.price_sum}"
 
     @property
-    def total_cost(self):
-        return self.unit_price * self.amount
+    def price_sum(self):
+        return self.token_round.unit_price * self.amount
