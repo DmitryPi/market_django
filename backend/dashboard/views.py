@@ -7,6 +7,8 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView, View
 
+from backend.tokens.models import Token, TokenRound
+
 from .forms import AvatarUpdateForm, BuyTokenForm, CustomUserUpdateForm
 
 User = get_user_model()
@@ -37,6 +39,12 @@ class DashboardIndexView(LoginRequiredMixin, DetailView):
     slug_url_kwarg = "username"
     template_name = "dashboard/index.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["token"] = Token.objects.first()
+        context["token_rounds"] = TokenRound.objects.all()
+        return context
+
 
 class DashboardTokenView(LoginRequiredMixin, View):
     template_name = "dashboard/token.html"
@@ -44,7 +52,14 @@ class DashboardTokenView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         buy_token_form = BuyTokenForm()
-        context = {"user": user, "buy_token_form": buy_token_form}
+        token = Token.objects.first()
+        token_rounds = TokenRound.objects.all()
+        context = {
+            "user": user,
+            "token": token,
+            "token_rounds": token_rounds,
+            "buy_token_form": buy_token_form,
+        }
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -67,6 +82,11 @@ class DashboardTeamView(LoginRequiredMixin, DetailView):
     slug_field = "username"
     slug_url_kwarg = "username"
     template_name = "dashboard/team.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["token"] = Token.objects.first()
+        return context
 
 
 class DashboardProfileView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
