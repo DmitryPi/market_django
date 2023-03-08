@@ -7,40 +7,35 @@ User = get_user_model()
 
 
 class Referral(models.Model):
-    # Relations
-    referrer = models.ForeignKey(
+    parent = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="%(class)ss",
+        related_name="parent",
     )
-    referred_user = models.OneToOneField(
+    child = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name="referred_by",
+        related_name="child",
         unique=True,
     )
-    # Fields
-    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = _("Referral")
         verbose_name_plural = _("Referrals")
 
     def __str__(self) -> str:
-        return f"{self.referrer.username} referrer of {self.referred_user.username}"
+        return f"[{self.parent.username}] is a parent of [{self.child.username}]"
 
     def save(self, *args, **kwargs):
         return super().save(*args, **kwargs)
 
     def clean(self):
         # Check if referrer refers to himself
-        if self.referred_user == self.referrer:
-            raise ValidationError(
-                {"referred_user": _("Referrer and referred user cannot be the same.")}
-            )
+        if self.parent == self.child:
+            raise ValidationError({"child": _("Parent and Child cannot be the same.")})
         # Check if referral link already exists
         existing_referral = Referral.objects.filter(
-            referrer=self.referrer, referred_user=self.referred_user
+            parent=self.parent, child=self.child
         ).first()
-        if existing_referral != self:
-            raise ValidationError({"referred_user": _("This referral already exists.")})
+        if existing_referral:
+            raise ValidationError({"child": _("This referral already exists.")})

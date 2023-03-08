@@ -46,7 +46,6 @@ classDiagram
     Token --o TokenRound : OneToMany
     User --o TokenOrder : OneToMany
     TokenRound --o TokenOrder : OneToMany
-    Referral -- TokenOrder : OneToOne
     TokenOrder -- TokenReward : Proxy
     TokenOrder -- TokenPurchase : Proxy
 
@@ -100,7 +99,6 @@ classDiagram
 
     class TokenOrder {
         buyer = OneToMany[User]
-        buyer_parent = OneToOne[Referral, null=True]
         token_round = OneToMany[TokenRound]
         -
         type = purchase|reward

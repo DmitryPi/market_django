@@ -10,5 +10,5 @@ class ReferralFactory(DjangoModelFactory):
     class Meta:
         model = Referral
 
-    referrer = SubFactory(UserFactory)
-    referred_user = SubFactory(UserFactory)
+    parent = SubFactory(UserFactory)
+    child = SubFactory(UserFactory)

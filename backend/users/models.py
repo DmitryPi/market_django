@@ -19,12 +19,6 @@ class User(AbstractUser):
         _("Аватар"), upload_to="avatars/", default="avatars/default.png"
     )
     metamask_wallet = models.CharField(_("Metamask"), max_length=155, blank=True)
-    referral_code = models.CharField(max_length=150, unique=True)
 
     def get_absolute_url(self):
         return reverse("dashboard:index", kwargs={"username": self.username})
-
-    def save(self, *args, **kwargs):
-        if not self.referral_code:
-            self.referral_code = self.username
-        return super().save(*args, **kwargs)

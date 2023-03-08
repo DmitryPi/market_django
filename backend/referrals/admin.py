@@ -5,4 +5,5 @@ from .models import Referral
 
 @admin.register(Referral)
 class ReferralAdmin(admin.ModelAdmin):
-    list_display = ["__str__", "created_at"]
+    list_display = ["__str__"]
+    list_select_related = ["parent", "child"]

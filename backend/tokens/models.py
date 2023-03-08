@@ -3,8 +3,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from backend.referrals.models import Referral
-
 User = get_user_model()
 
 
@@ -76,9 +74,6 @@ class TokenOrder(models.Model):
 
     # Relations
     buyer = models.ForeignKey(User, on_delete=models.PROTECT)
-    buyer_parent = models.OneToOneField(
-        Referral, on_delete=models.PROTECT, blank=True, null=True
-    )
     token_round = models.ForeignKey(TokenRound, on_delete=models.PROTECT)
     # Fields
     type = models.CharField(
@@ -90,6 +85,11 @@ class TokenOrder(models.Model):
 
     def __str__(self):
         return f"{self.buyer.username} - {self.amount} - {self.price_sum}"
+
+    def save(self, *args, **kwargs):
+        if self.reward:
+            self.type = self.Type.REWARD
+        return super().save(*args, **kwargs)
 
     @property
     def price_sum(self):
