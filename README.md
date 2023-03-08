@@ -12,29 +12,6 @@
 ## Архитектура
 
 ---
-Разделение на 4 слоя
-
-1. dashboard
-    - Выводит данные токенов и пользователя
-    - Обрабатывает формы
-
-2. referrals
-    - Модели (Referral, PurchaseReward)
-    - Логика рефералов
-    - Views - редиректы для перехода по ссылке
-
-3. tokens
-    - Модели (Token, TokenRound, TokenPurchase)
-    - Бизнес логика
-    - Переодические задачи по обновлению токена
-
-4. users
-    - Модели (User, Settings, Wallet)
-    - Реферальный код можно убрать, т.к. он дублирует username
-    - Wallet/Settings можно держать в User, в зависимости от масштаба
-
----
-
 
 ```mermaid
 ---
@@ -42,7 +19,6 @@ title: Модели
 ---
 classDiagram
     User -- Settings : OneToOne
-    User --o Referral : OneToMany
     Token --o TokenRound : OneToMany
     User --o TokenOrder : OneToMany
     TokenRound --o TokenOrder : OneToMany
@@ -50,6 +26,8 @@ classDiagram
     TokenOrder -- TokenPurchase : Proxy
 
     class User {
+        parent = OneToMany[self, null=True]
+        -
         username = CharField[unique=True]
         first_name = CharField[blank=True, max_length=150]
         last_name = CharField[blank=True, max_length=150]
@@ -69,11 +47,6 @@ classDiagram
         -
         birthday = DateField[blank=True, null=True]
         city = CharField[blank=True, max_length=50]
-    }
-
-    class Referral {
-        parent = OneToMany[User]
-        child = OneToMany[User]
     }
 
     class Token {
