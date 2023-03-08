@@ -38,7 +38,7 @@ classDiagram
         -
         token_balance = Integer/Decimal
         metamask_id = CharField[max_length=100]
-        is_metamask_confirmed = BooleanField
+        metamask_confirmed = BooleanField
         token_balance_usd()
     }
 
