@@ -263,10 +263,10 @@ tags
 dump.rdb
 
 ### Project template
-prm/media/*
-!prm/media/avatars
-prm/media/avatars/*
-!prm/media/avatars/default.png
+backend/media/*
+!backend/media/avatars
+backend/media/avatars/*
+!backend/media/avatars/default.png
 
 .pytest_cache/
 .ipython/
