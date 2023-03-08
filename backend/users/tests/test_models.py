@@ -45,7 +45,9 @@ class UserTests(TestCase):
         self.assertTrue(user.last_name)
         self.assertTrue(user.phone_number)
         self.assertTrue(user.date_of_birth)
+        self.assertEqual(user.token_balance, 0)
         self.assertTrue(user.metamask_wallet)
+        self.assertFalse(user.metamask_confirmed)
         self.assertEqual(user.avatar, "avatars/default.png")
 
     def test_get_absolute_url(self):

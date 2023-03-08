@@ -26,7 +26,10 @@ class User(AbstractUser):
     avatar = models.ImageField(
         _("Аватар"), upload_to="avatars/", default="avatars/default.png"
     )
+    # wallet
+    token_balance = models.PositiveIntegerField(_("Баланс токенов"), default=0)
     metamask_wallet = models.CharField(_("Metamask"), max_length=155, blank=True)
+    metamask_confirmed = models.BooleanField(_("Metamask подтвержден"), default=False)
 
     def get_absolute_url(self):
         return reverse("dashboard:index", kwargs={"username": self.username})
