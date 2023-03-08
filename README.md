@@ -36,7 +36,7 @@ classDiagram
         avatar = ImageField[upload_to="avatars/"]
         date_joined
         -
-        token_balance = Integer/Decimal
+        token_balance = PositiveIntegerField
         metamask_id = CharField[max_length=100]
         metamask_confirmed = BooleanField
         token_balance_usd()
@@ -76,10 +76,11 @@ classDiagram
         -
         type = purchase|reward
         amount = PositiveIntegerField
-        price_sum = DecimalField
         reward = PositiveIntegerField
+        price_sum = DecimalField
         created_at
         total_cost()
+        calc_reward()
     }
 
     class TokenPurchase {

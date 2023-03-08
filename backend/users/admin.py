@@ -50,4 +50,7 @@ class UserAdmin(auth_admin.UserAdmin):
         "last_name",
         "is_superuser",
     ]
+    list_select_related = [
+        "parent",
+    ]
     search_fields = ["username"]

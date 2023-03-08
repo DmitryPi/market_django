@@ -87,6 +87,7 @@ class TokenOrder(models.Model):
         return f"{self.buyer.username} - {self.amount} - {self.price_sum}"
 
     def save(self, *args, **kwargs):
+        self.reward = self.calc_reward(self.buyer.parent)
         if self.reward:
             self.type = self.Type.REWARD
         return super().save(*args, **kwargs)
@@ -94,3 +95,8 @@ class TokenOrder(models.Model):
     @property
     def price_sum(self):
         return self.token_round.unit_price * self.amount
+
+    def calc_reward(self, parent: User) -> int:
+        if parent:
+            return round(self.amount * (self.token_round.percent_share / 100))
+        return 0
