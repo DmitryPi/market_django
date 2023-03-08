@@ -12,11 +12,10 @@ class Referral(models.Model):
         on_delete=models.CASCADE,
         related_name="parent",
     )
-    child = models.OneToOneField(
+    child = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="child",
-        unique=True,
+        related_name="children",
     )
 
     class Meta:

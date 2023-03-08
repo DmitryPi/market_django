@@ -73,7 +73,7 @@ classDiagram
 
     class Referral {
         parent = OneToMany[User]
-        child = OneToOne[User]
+        child = OneToMany[User]
     }
 
     class Token {

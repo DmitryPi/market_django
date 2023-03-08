@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.db.utils import IntegrityError
+# from django.db.utils import IntegrityError
 from django.test import TestCase
 
 from .factories import Referral, ReferralFactory, UserFactory
@@ -58,15 +58,15 @@ class ReferralTests(TestCase):
         with self.assertRaises(ValidationError):
             existing_referral.clean()
 
-    def test_unique_constraint_for_child(self):
-        new_user = UserFactory()
-        ReferralFactory(
-            child=self.user,
-            parent=new_user,
-        )
-        # Ensure the unique constraint is enforced
-        with self.assertRaises(IntegrityError):
-            ReferralFactory(
-                child=self.user,
-                parent=new_user,
-            )
+    # def test_unique_constraint_for_child(self):
+    #     new_user = UserFactory()
+    #     ReferralFactory(
+    #         child=self.user,
+    #         parent=new_user,
+    #     )
+    #     # Ensure the unique constraint is enforced
+    #     with self.assertRaises(IntegrityError):
+    #         ReferralFactory(
+    #             child=self.user,
+    #             parent=new_user,
+    #         )
