@@ -19,8 +19,8 @@ class Token(models.Model):
     name = models.CharField(
         _("Название"), unique=True, db_index=True, max_length=50, default="Token"
     )
-    total_amount = models.PositiveIntegerField(_("Осталось токенов"))
-    total_amount_sold = models.PositiveIntegerField(_("Продано токенов"), default=0)
+    total_amount = models.PositiveBigIntegerField(_("Осталось токенов"))
+    total_amount_sold = models.PositiveBigIntegerField(_("Продано токенов"), default=0)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
