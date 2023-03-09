@@ -15,11 +15,16 @@
     - При регистрации пользователя по реферальной ссылке, мы добавляем этого реферала пользователю
     - Бонусная программа
 
-3. Запрос за аггрегацию TokenOrder.amount = кол-во проданных токенов
+3. ~~Запрос за аггрегацию TokenOrder.amount = кол-во проданных токенов~~
+    - TokenOrder.objects.aggregate(total=Sum("amount"))["total"]
 
-4. Запрос за аггрегацию TokenOrder.reward = кол-во выданных наград
+4. ~~Запрос за аггрегацию TokenOrder.reward = кол-во выданных наград~~
+    - TokenOrder.objects.aggregate(total=Sum("reward"))["total"]
 
-5. Запрос за аггрегацию TokenOrder в рамках token_round
+5. ~~Запрос за аггрегацию TokenOrder в рамках token_round~~
+    - token_round = TokenRound.objects.first()
+    - token_round.token_orders.aggregate(total=Sum('reward'))['total']
+    - token_round.token_orders.aggregate(total=Sum('amount'))['total']
 
 
 ## Архитектура
@@ -73,9 +78,11 @@ classDiagram
     }
 
     class TokenRound {
+        name = CharField
         currency = CharField
         unit_price = DecimalField
         total_cost = PositiveIntegerField
+        total_amount_sold = PositiveIntegerField
         percent_share = PositiveSmallIntegerField
         is_active
         is_complete
@@ -87,7 +94,6 @@ classDiagram
         buyer = OneToMany[User]
         token_round = OneToMany[TokenRound]
         -
-        type = purchase|reward
         amount = PositiveIntegerField
         reward = PositiveIntegerField
         reward_sent = BooleanField

@@ -15,13 +15,16 @@ class Token(models.Model):
 
     # Relations
     active_round = models.ForeignKey(
-        "TokenRound", on_delete=models.PROTECT, related_name="+"
+        "TokenRound",
+        on_delete=models.PROTECT,
+        related_name="+",
+        verbose_name=_("Активный раунд"),
     )
     # Fields
     name = models.CharField(
         _("Название"), unique=True, db_index=True, max_length=50, default="Token"
     )
-    total_amount = models.PositiveBigIntegerField(_("Осталось токенов"))
+    total_amount = models.PositiveBigIntegerField(_("Всего токенов"))
     total_amount_sold = models.PositiveBigIntegerField(_("Продано токенов"), default=0)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -42,11 +45,13 @@ class TokenRound(models.Model):
     class Currency(models.TextChoices):
         USD = "$", "USD"
 
+    name = models.CharField(_("Название"), max_length=50, default=_("Раунд"))
     currency = models.CharField(
         _("Валюта"), max_length=5, choices=Currency.choices, default=Currency.USD
     )
     unit_price = models.DecimalField(_("Цена"), max_digits=6, decimal_places=3)
     total_cost = models.PositiveIntegerField(_("Цена за все"))
+    total_amount_sold = models.PositiveIntegerField(_("Продано в раунде"), default=0)
     percent_share = models.PositiveSmallIntegerField(_("Доля"))
     is_active = models.BooleanField(_("Активен"), default=False)
     is_complete = models.BooleanField(_("Завершен"), default=False)
