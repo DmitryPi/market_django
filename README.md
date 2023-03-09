@@ -7,13 +7,11 @@
 
 1. ~~Прокси модели TokenReward, TokenPurchase~~
 
-5. Объединить TokenOrder amount/reward и создавать 2 объекта
-    - Плюсы: четкое разделение на reward/purchase запись
-    - Минусы: 2 записи за 1 order
-
 2. Реферальная система
     - При регистрации пользователя по реферальной ссылке, мы добавляем этого реферала пользователю
-    - Бонусная программа
+    - ~~Бонусная программа~~
+
+3. Интернационализация
 
 3. ~~Запрос за аггрегацию TokenOrder.amount = кол-во проданных токенов~~
     - TokenOrder.objects.aggregate(total=Sum("amount"))["total"]
@@ -32,6 +30,10 @@
 7. ~~Получить все покупки:~~
     - user.orders.all()
 
+5. Объединить TokenOrder amount/reward и создавать 2 объекта
+    - Плюсы: четкое разделение на reward/purchase запись
+    - Минусы: 2 записи за 1 order
+
 ## Архитектура
 
 ---
@@ -43,10 +45,10 @@ title: Модели
 classDiagram
     User -- Settings : OneToOne
     Token --o TokenRound : OneToMany
-    User --o TokenOrder : OneToMany
-    TokenRound --o TokenOrder : OneToMany
-    TokenOrder -- TokenPurchase : Proxy
-    TokenOrder -- TokenReward : Proxy
+    User --o TokenTransaction : OneToMany
+    TokenRound --o TokenTransaction : OneToMany
+    TokenTransaction -- TokenPurchase : Proxy
+    TokenTransaction -- TokenReward : Proxy
 
     class User {
         parent = OneToMany[self, null=True]
@@ -95,17 +97,16 @@ classDiagram
         progress()
     }
 
-    class TokenOrder {
+    class TokenTransaction {
         buyer = OneToMany[User]
         token_round = OneToMany[TokenRound]
         -
         amount = PositiveIntegerField
-        reward = PositiveIntegerField
-        reward_sent = BooleanField
         price_sum = DecimalField
+        parent_reward = PositiveIntegerField
+        parent_reward_sent = BooleanField
         created_at
-        price_sum()
-        calc_reward()
+        calc_parent_reward()
     }
 
     class TokenPurchase {

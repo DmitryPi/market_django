@@ -5,6 +5,7 @@ from django.urls import include, path
 from django.views import defaults as default_views
 
 from backend.dashboard.views import HomeRedirectView
+from backend.users.views import CustomSignupView
 
 # from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 # from rest_framework.authtoken.views import obtain_auth_token
@@ -14,6 +15,7 @@ urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
+    path("accounts/signup/", CustomSignupView.as_view(), name="account_signup"),
     path("accounts/", include("allauth.urls")),
     # Apps
     path("pages/", include("backend.pages.urls", namespace="pages")),
