@@ -80,7 +80,9 @@ class TokenOrder(models.Model):
         REWARD = _("Reward"), _("Reward")
 
     # Relations
-    buyer = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Покупатель")
+    buyer = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name="orders", verbose_name="Покупатель"
+    )
     token_round = models.ForeignKey(
         TokenRound,
         on_delete=models.PROTECT,

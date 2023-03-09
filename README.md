@@ -26,8 +26,11 @@
     - token_round.token_orders.aggregate(total=Sum('reward'))['total']
     - token_round.token_orders.aggregate(total=Sum('amount'))['total']
 
-6. Получить список наград пользователя
+6. ~~Получить список наград пользователя~~
+    - TokenOrder.objects.filter(buyer__parent__username="test")
 
+7. ~~Получить все покупки:~~
+    - user.orders.all()
 
 ## Архитектура
 
