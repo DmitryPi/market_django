@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from .managers import TokenPurchaseManager, TokenRewardManager
+
 User = get_user_model()
 
 
@@ -94,9 +96,35 @@ class TokenOrder(models.Model):
 
     @property
     def price_sum(self):
-        return self.token_round.unit_price * self.amount
+        return round(self.token_round.unit_price * self.amount, 2)
 
     def calc_reward(self, parent: User) -> int:
         if parent:
             return round(self.amount * (self.token_round.percent_share / 100))
         return 0
+
+
+class TokenReward(TokenOrder):
+    class Meta:
+        proxy = True
+        verbose_name = _("Token Reward")
+        verbose_name_plural = _("Token Rewards")
+
+    objects = TokenRewardManager()
+
+    def save(self, *args, **kwargs):
+        self.type = TokenOrder.Type.REWARD
+        return super().save(*args, **kwargs)
+
+
+class TokenPurchase(TokenOrder):
+    class Meta:
+        proxy = True
+        verbose_name = _("Token Purchase")
+        verbose_name_plural = _("Token Purchases")
+
+    objects = TokenPurchaseManager()
+
+    def save(self, *args, **kwargs):
+        self.type = TokenOrder.Type.PURCHASE
+        return super().save(*args, **kwargs)
