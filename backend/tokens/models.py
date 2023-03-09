@@ -76,13 +76,16 @@ class TokenOrder(models.Model):
 
     # Relations
     buyer = models.ForeignKey(User, on_delete=models.PROTECT)
-    token_round = models.ForeignKey(TokenRound, on_delete=models.PROTECT)
+    token_round = models.ForeignKey(
+        TokenRound, on_delete=models.PROTECT, related_name="token_orders"
+    )
     # Fields
     type = models.CharField(
         _("Тип"), max_length=20, choices=Type.choices, default=Type.PURCHASE
     )
     amount = models.PositiveIntegerField(_("Количество"))
     reward = models.PositiveIntegerField(_("Награда"), blank=True, null=True)
+    reward_sent = models.BooleanField(_("Награда начислена"), default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

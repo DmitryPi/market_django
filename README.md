@@ -5,7 +5,7 @@
 ## TODO
 ---
 
-1. Прокси модели TokenReward, TokenPurchase
+1. ~~Прокси модели TokenReward, TokenPurchase~~
 
 5. Объединить TokenOrder amount/reward и создавать 2 объекта
     - Плюсы: четкое разделение на reward/purchase запись
@@ -35,8 +35,8 @@ classDiagram
     Token --o TokenRound : OneToMany
     User --o TokenOrder : OneToMany
     TokenRound --o TokenOrder : OneToMany
-    TokenOrder -- TokenReward : Proxy
     TokenOrder -- TokenPurchase : Proxy
+    TokenOrder -- TokenReward : Proxy
 
     class User {
         parent = OneToMany[self, null=True]
@@ -90,21 +90,19 @@ classDiagram
         type = purchase|reward
         amount = PositiveIntegerField
         reward = PositiveIntegerField
+        reward_sent = BooleanField
         price_sum = DecimalField
         created_at
-        total_cost()
+        price_sum()
         calc_reward()
     }
 
     class TokenPurchase {
         type = purchase
-        amount = PositiveIntegerField
     }
 
     class TokenReward {
         type = reward
-        amount = PositiveIntegerField
-        reward = PositiveIntegerField
     }
 ```
 
