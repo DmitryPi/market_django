@@ -79,9 +79,11 @@ class TokenRoundTests(TestCase):
 
     def test_fields(self):
         token_round = TokenRoundFactory()
+        self.assertEqual(token_round.name, "Раунд")
         self.assertEqual(token_round.currency, "$")
         self.assertTrue(token_round.unit_price)
         self.assertTrue(token_round.total_cost)
+        self.assertEqual(token_round.total_amount_sold, 0)
         self.assertTrue(token_round.percent_share)
         self.assertFalse(token_round.is_active)
         self.assertFalse(token_round.is_complete)

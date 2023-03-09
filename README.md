@@ -26,6 +26,8 @@
     - token_round.token_orders.aggregate(total=Sum('reward'))['total']
     - token_round.token_orders.aggregate(total=Sum('amount'))['total']
 
+6. Получить список наград пользователя
+
 
 ## Архитектура
 
@@ -55,7 +57,7 @@ classDiagram
         date_joined
         -
         token_balance = PositiveIntegerField
-        metamask_id = CharField[max_length=100]
+        metamask_wallet = CharField[max_length=100]
         metamask_confirmed = BooleanField
         token_balance_usd()
     }
@@ -104,11 +106,9 @@ classDiagram
     }
 
     class TokenPurchase {
-        type = purchase
     }
 
     class TokenReward {
-        type = reward
     }
 ```
 
