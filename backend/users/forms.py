@@ -1,5 +1,6 @@
 from allauth.account.forms import SignupForm
 from django import forms
+from django.contrib import messages
 from django.contrib.auth import forms as admin_forms
 from django.contrib.auth import get_user_model
 from django.forms.widgets import TextInput
@@ -97,7 +98,7 @@ class UserSignupForm(SignupForm):
                 try:
                     user.parent = User.objects.get(username=referral)
                 except User.DoesNotExist:
-                    pass
+                    messages.error(request, _("Реферал не существует"))
 
             user.save()
         return user
