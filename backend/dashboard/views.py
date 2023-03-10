@@ -9,7 +9,7 @@ from django.views.generic import DetailView, RedirectView, UpdateView, View
 
 from backend.tokens.models import Token, TokenRound
 
-from .forms import AvatarUpdateForm, BuyTokenForm, CustomUserUpdateForm
+from .forms import AvatarUpdateForm, BuyTokenForm, ProfileUserUpdateForm
 
 User = get_user_model()
 
@@ -90,7 +90,7 @@ class DashboardTeamView(LoginRequiredMixin, DetailView):
 
 
 class DashboardProfileView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-    form_class = CustomUserUpdateForm
+    form_class = ProfileUserUpdateForm
     slug_field = "username"
     slug_url_kwarg = "username"
     template_name = "dashboard/profile.html"

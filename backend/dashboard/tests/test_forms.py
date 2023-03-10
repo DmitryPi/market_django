@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from backend.users.tests.factories import UserFactory
 
-from ..forms import AvatarUpdateForm, BuyTokenForm, CustomUserUpdateForm
+from ..forms import AvatarUpdateForm, BuyTokenForm, ProfileUserUpdateForm
 
 
 class BuyTokenFormTests(TestCase):
@@ -86,7 +86,7 @@ class AvatarUpdateFormTests(TestCase):
         self.assertIn("avatar", form.errors)
 
 
-class CustomUserUpdateFormTests(TestCase):
+class ProfileUserUpdateFormTests(TestCase):
     def setUp(self):
         self.user_pass = "testpass123"
         self.user = UserFactory(password=self.user_pass)
@@ -104,7 +104,7 @@ class CustomUserUpdateFormTests(TestCase):
         self.url = reverse("dashboard:profile", kwargs={"username": self.user.username})
 
     def test_valid_data(self):
-        form = CustomUserUpdateForm(
+        form = ProfileUserUpdateForm(
             data=self.form_data,
             instance=self.user,
         )
@@ -123,7 +123,7 @@ class CustomUserUpdateFormTests(TestCase):
 
     def test_password_mismatch(self):
         self.form_data.update({"password": "newpass123", "password1": "mismatch"})
-        form = CustomUserUpdateForm(
+        form = ProfileUserUpdateForm(
             data=self.form_data,
             instance=self.user,
         )
@@ -132,7 +132,7 @@ class CustomUserUpdateFormTests(TestCase):
 
     def test_weak_password(self):
         self.form_data.update({"password": "password", "password1": "password"})
-        form = CustomUserUpdateForm(
+        form = ProfileUserUpdateForm(
             data=self.form_data,
             instance=self.user,
         )
