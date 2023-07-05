@@ -4,37 +4,20 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
 
-from backend.dashboard.views import HomeRedirectView
-from backend.users.views import CustomSignupView
-
-# from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-# from rest_framework.authtoken.views import obtain_auth_token
+from backend.dashboard.views import DashboardRedirectView
+from backend.users.views import UserSignupView
 
 urlpatterns = [
-    path("", HomeRedirectView.as_view(), name="home"),
+    path("", DashboardRedirectView.as_view(), name="home"),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
-    path("accounts/signup/", CustomSignupView.as_view(), name="account_signup"),
+    path("accounts/signup/", UserSignupView.as_view(), name="account_signup"),
     path("accounts/", include("allauth.urls")),
     # Apps
-    path("pages/", include("backend.pages.urls", namespace="pages")),
     path("dashboard/", include("backend.dashboard.urls", namespace="dashboard")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# API URLS
-# urlpatterns += [
-#     # API base url
-#     path("api/", include("config.api_router")),
-#     # DRF auth token
-#     path("auth-token/", obtain_auth_token),
-#     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
-#     path(
-#         "api/docs/",
-#         SpectacularSwaggerView.as_view(url_name="api-schema"),
-#         name="api-docs",
-#     ),
-# ]
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit

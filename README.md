@@ -1,253 +1,138 @@
-# Market
+# PRM4ALL
 
-Практика создания маркета
+PRM4ALL description
 
 ## TODO
 ---
 
-1. ~~Прокси модели TokenReward, TokenPurchase~~
+1. Core
+    - Сервисы
+        - Начисление rewards пользователям
 
-2. ~~Реферальная система~~
-    - ~~При регистрации пользователя по реферальной ссылке, мы добавляем этого реферала пользователю~~
-    - ~~Бонусная программа~~
-    - Parent reward - 5%
-    - Тесты
+2. Tokens
+    - Если иметь транзакции PENDING - возможна ситуация, если пользователь завис и оплатил позже, когда раунд уже закончился - статус транзакции меняется на SUCCESS и подсчет проданных токенов ломается.
+        - Решение: ограничить время pending транзакции на n секунд, создать таск на обновление статуса с pending -> failed. Резервировать пулл токенов для продажи
 
-3. Интернационализация
+3. Dashboard
+    - HTMX
+        - обновление данных
+        - if tab active
+    - Формы "buy tokens" - Перевод формы в ajax
+    - Подтверждение metamask_wallet после Update profile
+    - ProfileUserUpdateForm валидации
+        - Проверка полей имя/фамилия/город на плохие слова
 
-3. Кеширование частных случаев Redis
+4. Документация
 
-3. ~~Запрос за аггрегацию TokenOrder.amount = кол-во проданных токенов~~
-    - TokenOrder.objects.aggregate(total=Sum("amount"))["total"]
+5. Интернационализация
+    - Английский
+    - Испанский
 
-4. ~~Запрос за аггрегацию TokenOrder.reward = кол-во выданных наград~~
-    - TokenOrder.objects.aggregate(total=Sum("reward"))["total"]
 
-5. ~~Запрос за аггрегацию TokenOrder в рамках token_round~~
-    - token_round = TokenRound.objects.first()
-    - token_round.token_orders.aggregate(total=Sum('reward'))['total']
-    - token_round.token_orders.aggregate(total=Sum('amount'))['total']
+## Начало работы
+---
+### Локально
 
-6. ~~Получить список наград пользователя~~
-    - TokenOrder.objects.filter(buyer__parent__username="test")
+1. Обновить example.env на .env
+2. `set READ_DOT_ENV_FILE=TRUE`
+3. В .env обновить DATABASE_URL и создать свою postgres бд
+4. Закоментить hiredis в requirements/local.txt
+5. `pip install -r requirements/local.txt`
+6. `python manage.py migrate`
+7. `python manage.py createsuperuser`
+8. `python manage.py runserver`
 
-7. ~~Получить все покупки:~~
-    - user.orders.all()
+### Докер
 
-5. Объединить TokenOrder amount/reward и создавать 2 объекта
-    - Плюсы: четкое разделение на reward/purchase запись
-    - Минусы: 2 записи за 1 order
+- Локальная разработка
+    - `docker-compose -f local.yml up --build`
 
-## Архитектура
+- Продакшен
+    - `docker-compose -f production.yml up --build`
 
+- Создать суперюзера
+    - `docker-compose -f local.yml run --rm django python manage.py createsuperuser`
+
+## Фронтенд
 ---
 
-```mermaid
+    Стек gulp + sass. Только вне докера.
+    Gulp минифицирует *.scss файлы, а BrowserSync проксирует порт 8000
+
+    # Установка:
+    npm install
+    gulp
+
+
+## Тестирование
 ---
-title: Модели
+
+### Mypy
+
+    $ mypy prm
+
+### Test coverage
+
+    $ coverage run -m pytest
+    $ coverage html
+    $ open htmlcov/index.html
+
+### Pytest
+
+    $ pytest
+
+
+## Celery
 ---
-classDiagram
-    User -- Settings : OneToOne
-    Token --o TokenRound : OneToMany
-    User --o TokenTransaction : OneToMany
-    TokenRound --o TokenTransaction : OneToMany
-    TokenTransaction -- TokenPurchase : Proxy
-    TokenTransaction -- TokenReward : Proxy
-
-    class User {
-        parent = OneToMany[self, null=True]
-        -
-        username = CharField[unique=True]
-        first_name = CharField[blank=True, max_length=150]
-        last_name = CharField[blank=True, max_length=150]
-        email = CharField[blank=True, max_length=254]
-        phone_number = CharField[blank=True, max_length=30]
-        avatar = ImageField[upload_to="avatars/"]
-        date_joined
-        -
-        token_balance = PositiveIntegerField
-        metamask_wallet = CharField[max_length=100]
-        metamask_confirmed = BooleanField
-        token_balance_usd()
-    }
-
-    class Settings {
-        user = OneToOne[User, on_delete=CASCADE]
-        -
-        birthday = DateField[blank=True, null=True]
-        city = CharField[blank=True, max_length=50]
-    }
-
-    class Token {
-        active_round = OneToMany
-        -
-        name
-        total_amount = PositiveIntegerField
-        total_amount_sold = PositiveIntegerField
-        updated_at
-        total_amount_left()
-    }
-
-    class TokenRound {
-        name = CharField
-        currency = CharField
-        unit_price = DecimalField
-        total_cost = PositiveIntegerField
-        total_amount_sold = PositiveIntegerField
-        percent_share = PositiveSmallIntegerField
-        is_active
-        is_complete
-        updated_at
-        progress()
-    }
-
-    class TokenTransaction {
-        buyer = OneToMany[User]
-        token_round = OneToMany[TokenRound]
-        -
-        amount = PositiveIntegerField
-        price_sum = DecimalField
-        parent_reward = PositiveIntegerField
-        parent_reward_sent = BooleanField
-        created_at
-        calc_parent_reward()
-    }
-
-    class TokenPurchase {
-    }
-
-    class TokenReward {
-    }
-```
+- Возможно тестирование вне докера / Проверка работы с докером
 
 
-## Цели
-
+## Email Server
 ---
-1. ~~Создание разных групп пользователей и их разделение~~
-2. ~~Создание дешборда~~
-    - ~~Форма обновление аватара пользователя~~
-    - ~~Форма обновление аватара ajax~~
-    - ~~Форма обновление информации о пользователе~~
-    - Test validators
-3. ~~Вход при помощи metamask~~
-    - Test MetamaskLoginTests
-4. ~~Статические страницы~~
-    - ~~Добавление app pages + Тестирование~~
-    - ~~Редактирование статики в админе~~
-5. Реферальная система
 
-    1. Define the referral program structure:
-        - Determine the rewards: Decide on the rewards that users can earn through the referral program. Rewards could be in the form of discounts, credits, or other benefits.
+    Для локальной разработки в докер доступен mailhog, вне докера django-email-backend
 
-        - Number of levels: Determine the number of levels in the referral program. For example, you may want to allow users to earn rewards for referring other users and also for the referrals made by the users they referred.
+    Mailhog работает на порту:
+    http://localhost:8025/
 
-        - Conditions for earning rewards: Set the conditions for earning rewards, such as the number of referrals required or the amount spent by the referred user.
+## Докер:
 
-    2. Create referral models:
-        - Create a Referral model to store information about the referral program, such as the referral code, the user who referred, the user who was referred, and the rewards earned.
+### Полезные команды
 
-        - Create a Reward model to store information about the rewards, such as the type of reward, the amount, and the user who earned it.
+    # containers status
+    docker-compose -f production.yml ps
 
-    3. Create referral views:
-        - Create a view to handle the referral code input by the user. The view should validate the code and associate the referral with the user.
+    # containers logs
+    docker-compose -f production.yml logs
 
-        - Create a view to handle the referral signup process. The view should validate the referral code and create the referral record.
+    # remove unused(dangling) images
+    docker image prune
 
-        - Create a view to display the referral history and the rewards earned by the user.
+    # django shell run
+    docker-compose -f production.yml run --rm django python manage.py shell
 
-    4. Create referral templates:
-        - Create HTML templates to display the referral program information and referral forms.
+    # django dump db data
+    docker-compose -f production.yml run --rm django bash
+    python -Xutf8 manage.py dumpdata {app}.{Model -o data.json
+      # Открыть вторую консоль, сохраняя сессию в старой
+      docker cp 5f5cecd3798e:/app/data.json ./data.json
 
-        - Include referral program information in the user account pages and other relevant pages.
-
-    5. Integrate referral program with authentication:
-        - Use Django authentication to ensure that only authenticated users can participate in the referral program.
-
-        - Associate the referral program with user accounts to track referrals and rewards earned by each user.
-
-    6. Track referrals:
-        - Create a view to display the user's referrals and rewards earned.
-
-        - Implement logic to track the number of referrals and the rewards earned by the user.
-
-    7. Implement referral logic:
-        - Implement logic to track the referrals, assign rewards, and update the referral history.
-
-        - Create methods to calculate the rewards earned based on the referral program structure.
-
-        - Associate the referral program with the user accounts to track the referrals and rewards earned by each user.
-
-    8. Test the referral system:
-        - Create test cases to verify that the referral program works as intended.
-
-        - Test the referral program for different referral scenarios and ensure that the rewards are calculated correctly.
-
-6. Создание маркета
-    - Конвертация цены на лету
-    - Таксация товара продавца
-    - Интеграция с разными платежными шлюзами
-        - crypto
-        - stripe
-        - сбер
-        - yoomoney
-        - qiwi
-7. Создание CRM на основе маркета
-8. Переход на DRF
-9. Тренировка Vue
-10. Тренировка github/gitlab CI
+    # If you want to scale application
+    # ❗ Don’t try to scale postgres, celerybeat, or traefik
+    docker-compose -f production.yml up --scale django=4
+    docker-compose -f production.yml up --scale celeryworker=2
 
 
-## Модели
-
-```mermaid
+## Документация
 ---
-title: Модели
+
+- Sphinx readthedocs
+
+## Deployment
 ---
-classDiagram
-    Market <|-- Category
-    Category <|-- Lot
 
-    class Market {
-        title
-        description = TextField
-        help_description = TextField
-        help_seller = TextField
-        poster
-    }
+Инструкции по деплою.
 
-    class Category {
-        market = ForeignKey
-        lot_type = [multiple, form]
-    }
+### Sentry
 
-    class Lot {
-        user = ForeignKey
-        category = ForeignKey
-        -
-        platform = [pc, ios, android]
-        char_level
-        lang = [en, ru]
-        description
-        short_description
-        price
-        price_unit
-        currency = [rub,usd]
-        quantity
-        is_active
-        deactive_after_sell
-
-    }
-
-    class LotLeague {
-        platform
-    }
-
-    class LotType {
-
-    }
-
-    class User {
-    }
-
-```
+Нужно задать переменные окружения SENTRY_DSN и опционально DJANGO_SENTRY_LOG_LEVEL

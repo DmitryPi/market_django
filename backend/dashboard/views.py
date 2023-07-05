@@ -1,92 +1,99 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, RedirectView, UpdateView, View
+from django.views.generic import RedirectView, UpdateView, View
 
-from backend.tokens.models import Token, TokenRound
+from backend.core.services import create_transaction
+from backend.core.utils import calculate_rounded_total_price
+from backend.tokens.models import Token, TokenRound, TokenTransaction
 
 from .forms import AvatarUpdateForm, BuyTokenForm, ProfileUserUpdateForm
 
 User = get_user_model()
 
 
-class HomeRedirectView(View):
-    def get(self, request):
-        if request.user.is_authenticated:
-            return redirect(
-                reverse("dashboard:index", kwargs={"username": request.user.username}),
-                permanent=False,
-            )
-        return redirect(reverse("account_login"), permanent=False)
-
-
-class DashboardRedirectView(LoginRequiredMixin, RedirectView):
+class DashboardRedirectView(RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
-        return reverse(
-            "dashboard:index", kwargs={"username": self.request.user.username}
+        if self.request.user.is_authenticated:
+            return reverse_lazy(
+                "dashboard:index", kwargs={"username": self.request.user.username}
+            )
+        return reverse_lazy("account_login")
+
+
+class DashboardBaseView(LoginRequiredMixin, View):
+    template_name = ""
+
+    def get_context_data(self):
+        token = Token.objects.first()
+        token_rounds = TokenRound.objects.all()
+        user = self.request.user
+        user_referral = self.request.build_absolute_uri(
+            reverse_lazy("account_signup") + "?referral=" + user.username
         )
+        user_balance = calculate_rounded_total_price(
+            unit_price=user.token_balance,
+            amount=token.active_round.unit_price,
+        )
+        user_transactions = (
+            TokenTransaction.objects.filter(status=TokenTransaction.Status.SUCCESS)
+            .select_related("buyer")
+            .filter(Q(buyer=user) | Q(buyer__parent=user, reward_sent=True))
+        )
+        user_children = user.children.select_related("settings")
+        return {
+            "user": user,
+            "user_referral_link": user_referral,
+            "user_balance": user_balance,
+            "user_transactions": user_transactions,
+            "user_children": user_children,
+            "token": token,
+            "token_rounds": token_rounds,
+        }
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
 
 
-class DashboardIndexView(LoginRequiredMixin, DetailView):
-    model = User
-    slug_field = "username"
-    slug_url_kwarg = "username"
+class DashboardIndexView(DashboardBaseView):
     template_name = "dashboard/index.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["token"] = Token.objects.first()
-        context["token_rounds"] = TokenRound.objects.all()
-        return context
 
-
-class DashboardTokenView(LoginRequiredMixin, View):
+class DashboardTokenView(DashboardBaseView):
     template_name = "dashboard/token.html"
 
     def get(self, request, *args, **kwargs):
-        user = self.request.user
-        buy_token_form = BuyTokenForm()
-        token = Token.objects.first()
-        token_rounds = TokenRound.objects.all()
-        context = {
-            "user": user,
-            "token": token,
-            "token_rounds": token_rounds,
-            "buy_token_form": buy_token_form,
-        }
+        context = self.get_context_data()
+        context["buy_token_form"] = BuyTokenForm()
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         form = BuyTokenForm(request.POST)
         if form.is_valid():
-            # token_amount = form.cleaned_data['token_amount']
-            # token_price_usdt = form.cleaned_data['token_price_usdt']
+            user = self.request.user
+            token_amount = form.cleaned_data["token_amount"]
+
+            create_transaction(buyer=user, token_amount=token_amount)
+            user.update_token_balance(token_amount)
+
             return redirect(
-                reverse(
-                    "dashboard:token", kwargs={"username": self.request.user.username}
-                )
+                reverse_lazy("dashboard:token", kwargs={"username": user.username})
             )
-        user = self.request.user
-        context = {"user": user, "buy_token_form": form}
+        context = self.get_context_data()
+        context["buy_token_form"] = form
         return render(request, self.template_name, context)
 
 
-class DashboardTeamView(LoginRequiredMixin, DetailView):
-    model = User
-    slug_field = "username"
-    slug_url_kwarg = "username"
+class DashboardTeamView(DashboardBaseView):
     template_name = "dashboard/team.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["token"] = Token.objects.first()
-        return context
 
 
 class DashboardProfileView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -94,10 +101,10 @@ class DashboardProfileView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     slug_field = "username"
     slug_url_kwarg = "username"
     template_name = "dashboard/profile.html"
-    success_message = _("Information successfully updated")
+    success_message = _("Информация успешно обновлена")
 
     def get_success_url(self):
-        return reverse(
+        return reverse_lazy(
             "dashboard:profile", kwargs={"username": self.request.user.username}
         )
 

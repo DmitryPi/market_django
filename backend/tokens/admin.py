@@ -1,34 +1,28 @@
 from django.contrib import admin
 
-from .models import Token, TokenOrder, TokenPurchase, TokenReward, TokenRound
+from .models import Token, TokenRound, TokenTransaction
 
 
 @admin.register(Token)
 class TokenAdmin(admin.ModelAdmin):
-    list_display = ["name", "total_amount", "total_amount_sold"]
+    list_display = [
+        "name",
+        "total_amount",
+        "available_amount",
+        "updated_at",
+    ]
 
 
 @admin.register(TokenRound)
 class TokenRoundAdmin(admin.ModelAdmin):
     list_display = [
+        "name",
         "unit_price",
         "total_cost",
         "percent_share",
-        "is_active",
-        "is_complete",
     ]
 
 
-@admin.register(TokenOrder)
-class TokenOrderAdmin(admin.ModelAdmin):
-    list_display = ["buyer", "type", "amount", "reward", "price_sum"]
-
-
-@admin.register(TokenPurchase)
-class TokenPurchaseAdmin(TokenOrderAdmin):
-    pass
-
-
-@admin.register(TokenReward)
-class TokenRewardAdmin(TokenOrderAdmin):
-    pass
+@admin.register(TokenTransaction)
+class TokenTransactionAdmin(admin.ModelAdmin):
+    list_display = ["buyer", "status", "amount", "total_price", "reward", "reward_sent"]

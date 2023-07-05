@@ -4,39 +4,47 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 
+from backend.tokens.tests.factories import TokenFactory
 from backend.users.tests.factories import UserFactory
 
 from ..forms import AvatarUpdateForm, BuyTokenForm, ProfileUserUpdateForm
 
 
 class BuyTokenFormTests(TestCase):
+    def setUp(self):
+        self.token = TokenFactory()
+        self.token.active_round.save()
+
     def test_form_valid(self):
-        form_data = {"token_amount": 10, "token_price_usdt": 1.2345}
-        form = BuyTokenForm(data=form_data)
+        form = BuyTokenForm(data={"token_amount": 1000})
         self.assertTrue(form.is_valid())
 
     def test_form_invalid(self):
-        form_data = {"token_amount": "abc", "token_price_usdt": "1.23.45"}
-        form = BuyTokenForm(data=form_data)
+        form = BuyTokenForm(data={"token_amount": "abc", "token_price_usdt": "1.23.45"})
         self.assertFalse(form.is_valid())
-        self.assertEqual(len(form.errors), 2)
+        self.assertEqual(len(form.errors), 1)
 
     def test_token_amount_required(self):
-        form_data = {"token_price_usdt": 1.2345}
-        form = BuyTokenForm(data=form_data)
+        form = BuyTokenForm(data={"token_price_usdt": 1.2345})
         self.assertFalse(form.is_valid())
         self.assertTrue("token_amount" in form.errors)
 
-    def test_token_price_usdt_required(self):
-        form_data = {"token_amount": 10}
-        form = BuyTokenForm(data=form_data)
+    def test_clean_token_amount_negative(self):
+        form = BuyTokenForm(data={"token_amount": -10})
         self.assertFalse(form.is_valid())
-        self.assertTrue("token_price_usdt" in form.errors)
+        self.assertTrue("token_amount" in form.errors)
 
-    def test_token_amount_non_negative(self):
-        form_data = {"token_amount": -10, "token_price_usdt": 1.2345}
-        form = BuyTokenForm(data=form_data)
-        self.assertFalse(form.is_valid())
+    def test_clean_token_amount_available(self):
+        # Test max amount not reached
+        amount = self.token.active_round.available_amount
+        form = BuyTokenForm(data={"token_amount": amount})
+        self.assertTrue(form.is_valid())
+
+    def test_clean_token_amount_available_invalid(self):
+        # Test max amount reached
+        amount = self.token.active_round.available_amount + 1
+        form = BuyTokenForm(data={"token_amount": amount})
+        self.assertEqual(len(form.errors), 1)
         self.assertTrue("token_amount" in form.errors)
 
 
@@ -95,7 +103,7 @@ class ProfileUserUpdateFormTests(TestCase):
             "last_name": "Doe",
             "email": "testuser@example.com",
             # "phone_number": "8 (999) 999-99-99",
-            "date_of_birth": "1990-01-01",
+            "birthday": "1990-01-01",
             "city": "Test City",
             "metamask_wallet": "0x1234567890",
             "password": "newpass123",
@@ -114,10 +122,10 @@ class ProfileUserUpdateFormTests(TestCase):
         self.assertEqual(user.last_name, self.form_data["last_name"])
         # self.assertEqual(user.phone_number, self.form_data["phone_number"])
         self.assertEqual(
-            user.date_of_birth,
-            datetime.strptime(self.form_data["date_of_birth"], "%Y-%m-%d").date(),
+            user.settings.birthday,
+            datetime.strptime(self.form_data["birthday"], "%Y-%m-%d").date(),
         )
-        self.assertEqual(user.city, self.form_data["city"])
+        self.assertEqual(user.settings.city, self.form_data["city"])
         self.assertEqual(user.metamask_wallet, self.form_data["metamask_wallet"])
         self.assertTrue(user.check_password(self.form_data["password"]))
 

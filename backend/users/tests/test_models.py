@@ -38,30 +38,33 @@ class UserTests(TestCase):
             User.objects.get(id=user.id)
 
     def test_fields(self):
-        user = UserFactory(**self.user_data)
+        user = UserFactory(parent=UserFactory(), **self.user_data)
+        # parent
+        self.assertTrue(user.parent.username)
+        # fields
         self.assertTrue(user.username)
         self.assertTrue(user.email)
         self.assertTrue(user.first_name)
         self.assertTrue(user.last_name)
         self.assertTrue(user.phone_number)
-        self.assertTrue(user.date_of_birth)
-        self.assertEqual(user.token_balance, 0)
-        self.assertTrue(user.metamask_wallet)
-        self.assertFalse(user.metamask_confirmed)
         self.assertEqual(user.avatar, "avatars/default.png")
+        # wallet
+        self.assertTrue(user.token_balance)
+        self.assertTrue(user.metamask_wallet)
+        self.assertIsInstance(user.metamask_confirmed, bool)
+        # settings
+        self.assertTrue(user.settings.birthday)
+        self.assertTrue(user.settings.city)
 
-    def test_get_absolute_url(self):
-        user = UserFactory()
-        self.assertEqual(user.get_absolute_url(), f"/dashboard/{user.username}/")
+    def test_parent_set_null(self):
+        parent = UserFactory()
+        user = UserFactory(parent=parent, **self.user_data)
+        self.assertEqual(user.parent, parent)
+        parent.delete()
+        user.refresh_from_db()
+        self.assertEqual(user.parent, None)
 
-    def test_clean_parent_not_equal_self(self):
-        user = UserFactory()
-        # Ensure the clean method raises a validation error
-        with self.assertRaises(ValidationError):
-            user.parent = user
-            user.clean()
-
-    def test_parent_child_relation(self):
+    def test_parent_children_relation(self):
         parent = UserFactory(**self.user_data)
         users = [UserFactory(parent=parent), UserFactory(parent=parent), UserFactory()]
         # Test relations
@@ -76,3 +79,57 @@ class UserTests(TestCase):
         # user3
         self.assertFalse(users[2].parent)
         self.assertEqual(users[2].children.count(), 0)
+
+    def test_get_absolute_url(self):
+        user = UserFactory()
+        self.assertEqual(user.get_absolute_url(), f"/dashboard/{user.username}/")
+
+    def test_clean_parent(self):
+        user = UserFactory()
+        with self.assertRaises(ValidationError):
+            user.parent = user
+            user.clean()
+
+    def test_clean_metamask_wallet_blank(self):
+        user = UserFactory(metamask_wallet="", metamask_confirmed=False)
+        user.metamask_wallet = "123"
+        user.metamask_confirmed = True
+        user.clean()
+        user.save()
+
+    def test_clean_metamask_wallet_confirmed(self):
+        user = UserFactory(metamask_confirmed=True)
+        with self.assertRaises(ValidationError):
+            user.metamask_wallet = "123"
+            user.clean()
+
+    def test_clean_metamask_wallet_confirmed_to_blank(self):
+        user = UserFactory(metamask_wallet="123", metamask_confirmed=True)
+        with self.assertRaises(ValidationError):
+            user.metamask_wallet = ""
+            user.clean()
+
+    def test_clean_metamask_wallet_not_confirmed(self):
+        user = UserFactory(metamask_confirmed=False)
+        user.metamask_wallet = "123"
+        user.clean()
+        user.save()
+        # Try to change unconfirmed wallet
+        user.metamask_wallet = "1234"
+        user.clean()
+
+    def test_property_full_name(self):
+        user = UserFactory()
+        self.assertEqual(user.full_name, f"{user.first_name} {user.last_name}")
+
+    def test_update_token_balance(self):
+        user = UserFactory(token_balance=0)
+        amounts = [(100, 100), (55, 155), (-100, 55)]
+        for amount, result in amounts:
+            user.update_token_balance(amount)
+            self.assertEqual(user.token_balance, result)
+
+    def test_update_token_balance_float(self):
+        user = UserFactory(token_balance=0)
+        user.update_token_balance(0.1)
+        self.assertEqual(user.token_balance, 0)

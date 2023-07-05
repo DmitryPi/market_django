@@ -1,31 +1,45 @@
 from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
-from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from backend.users.forms import UserAdminChangeForm, UserAdminCreationForm
+from .forms import UserAdminChangeForm, UserAdminCreationForm
+from .models import User, UserSettings
 
-User = get_user_model()
+
+class UserSettingsInline(admin.StackedInline):
+    model = UserSettings
+    can_delete = False
+    verbose_name = "Дополнительная информация"
+    fk_name = "user"
 
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
+    inlines = (UserSettingsInline,)
     fieldsets = (
-        (None, {"fields": ("username", "password", "parent")}),
+        (None, {"fields": ("username", "password")}),
         (
-            _("Personal info"),
+            _("Персональная информация"),
             {
                 "fields": (
+                    "parent",
                     "first_name",
                     "last_name",
                     "email",
                     "phone_number",
-                    "date_of_birth",
-                    "city",
-                    "metamask_wallet",
                     "avatar",
+                )
+            },
+        ),
+        (
+            _("Кошелек"),
+            {
+                "fields": (
+                    "token_balance",
+                    "metamask_wallet",
+                    "metamask_confirmed",
                 )
             },
         ),
@@ -49,8 +63,5 @@ class UserAdmin(auth_admin.UserAdmin):
         "first_name",
         "last_name",
         "is_superuser",
-    ]
-    list_select_related = [
-        "parent",
     ]
     search_fields = ["username"]

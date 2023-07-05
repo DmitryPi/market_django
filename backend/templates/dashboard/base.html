@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load l10n %}
+{% load i18n %}
 {% load humanize %}
+{% load dashboard_extras %}
+
+{% block head_title %} - Dashboard{% endblock %}
 
 {% block content %}
 <img id="burger" src="{% static 'img/icons/menu_burger.svg' %}" alt="">
@@ -91,19 +96,22 @@
     </div>
 
     <div id="main" class="main">
-        <p class="page_path">Pages / Dashboard</p>
+        <p class="page_path">Pages / {% block crumbs_title %}Dashboard{% endblock %}</p>
         <div class="tile header">
 
             <div class="page_name_div">
-                <h2 class="page_name">Dashboard</h2>
+                <h1 class="page_name">{% block page_title %}Dashboard{% endblock %}</h1>
             </div>
             <div class="bio_part">
-                <a href="" class="btn btn-slim invite_link">Ссылка для приглашения</a>
+                <button id="invite_link" class="btn btn-slim invite_link" data-referral-link="{{ user_referral_link }}">
+                    <span>{% translate "Ссылка для приглашения" %}</span>
+                    <span>{% translate "Скопировано" %}</span>
+                </button>
                 <a href="" class="metamask_button">
                     <img src="{% static 'img/icons/metamask.svg'%}" alt="metamask">
                 </a>
                 <a href="">
-                    <img class="avatar_icon" src="{{ request.user.avatar.url }}" alt="Avatar">
+                    <img class="avatar-img avatar_icon" src="{{ request.user.avatar.url }}" alt="Avatar">
                 </a>
             </div>
         </div>
@@ -120,14 +128,14 @@
                     <img class="tile_icon" src="{% static 'img/icons/sum_icon.svg'%}" alt="">
                     <div class="tile_text">
                         <p class="tile_name">Сумма токенов</p>
-                        <p class="tile_counter">{{ token.active_round.currency }}642.39</p>
+                        <p class="tile_counter">$ {{ user_balance|unlocalize }}</p>
                     </div>
                 </div>
                 <div id="token_amount" class="tile little_tile">
                     <img class="tile_icon" src="" alt="">
                     <div class="tile_text">
                         <p class="tile_name">Кол-во токенов в продаже</p>
-                        <p class="tile_counter">{{ token.total_amount|intcomma }}</p>
+                        <p class="tile_counter">{{ token.available_amount|intcomma }}</p>
                     </div>
                 </div>
                 <div id="rate" class="tile little_tile">
@@ -135,7 +143,11 @@
                     <div class="tile_text">
                         <p class="tile_name">Курс токена</p>
                         <p class="tile_counter">
-                            {{ token.active_round.currency }}{{ token.active_round.unit_price }}
+                            <span>1 PRM =</span>
+                            <span>
+                                {{ token.active_round.currency }}
+                                {{ token.active_round.unit_price|strip_zeros|unlocalize }}
+                            </span>
                         </p>
                     </div>
                 </div>
